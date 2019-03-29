@@ -26,4 +26,9 @@ public class World : MonoBehaviour
 			}
 		}
 	}
+
+	public WorldTile GetTile(int x, int y)
+	{
+		return _tileMap[x, y];
+	}
 }

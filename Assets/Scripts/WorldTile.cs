@@ -6,7 +6,10 @@ public class WorldTile : MonoBehaviour
 {
 	private Sprite _sprite;
 
-	public Vector2 Position { get; set; }
+	public Vector2 Position;
+
+	public bool Occupied;
+
 	public Sprite Sprite
 	{
 		get { return _sprite; }
@@ -19,6 +22,6 @@ public class WorldTile : MonoBehaviour
 
 	private void Start()
 	{
-		Sprite = Resources.Load<Sprite>("Sprites/DefaultTile");
+		Sprite = Resources.Load<Sprite>("Sprites/DebugSquare");
 	}
 }
