@@ -8,6 +8,7 @@ public class EntityGhost : MonoBehaviour {
     private int _sizeY;
 
     private GameObject[] _ghosts;
+	private WorldTile[] _tiles;
     private Camera _camera;
 
     private void Start() {
