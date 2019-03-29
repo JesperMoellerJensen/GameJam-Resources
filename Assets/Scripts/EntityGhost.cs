@@ -46,7 +46,7 @@ public class EntityGhost : MonoBehaviour {
         var i = 0;
         for (var y = 0; y < _sizeY; y++) {
             for (var x = 0; x < _sizeX; x++) {
-                var tile = _world.GetTile((int) clamp.x + x, (int) clamp.y + y);
+                var tile = _world.GetTileFromWorldPosition(clamp.x + x, clamp.y + y);
                 _ghosts[i].transform.position = new Vector2((int) clamp.x + x, (int) clamp.y + y);
                 _ghosts[i].GetComponent<SpriteRenderer>().color = tile.Occupied == false ? Color.green : Color.red;
                 i++;
