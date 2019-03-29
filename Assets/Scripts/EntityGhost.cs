@@ -2,83 +2,54 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EntityGhost : MonoBehaviour
-{
-	private World _world;
-	private int _sizeX;
-	private int _sizeY;
+public class EntityGhost : MonoBehaviour {
+    private World _world;
+    private int _sizeX;
+    private int _sizeY;
 
-	private GameObject[] _ghosts;
-	private void Start()
-	{
-		_world = FindObjectOfType<World>();
+    private GameObject[] _ghosts;
+    private Camera _camera;
 
-		SetGhostSize(2, 2);
-	}
-	private void Update()
-	{
-		CheckArea();
-	}
+    private void Start() {
+        _camera = Camera.main;
+        _world = FindObjectOfType<World>();
 
-	private void SetGhostSize(int x, int y)
-	{
-		_sizeX = x;
-		_sizeY = y;
+        SetGhostSize(2, 2);
+    }
 
-		int size = _sizeX * _sizeY;
+    private void Update() {
+        CheckArea();
+    }
 
-		_ghosts = new GameObject[size];
+    private void SetGhostSize(int x, int y) {
+        _sizeX = x;
+        _sizeY = y;
 
-		for (int i = 0; i < size; i++)
-		{
-			GameObject o = new GameObject();
-			o.transform.parent = transform;
-			o.AddComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/DefaultTile");
-			o.GetComponent<SpriteRenderer>().sortingOrder = 1;
-			_ghosts[i] = o;
-		}
-	}
+        var size = _sizeX * _sizeY;
 
-	private void CheckArea()
-	{
-		Vector2 MousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-		Vector2 Clamp = new Vector2(Mathf.RoundToInt(MousePosition.x), Mathf.RoundToInt(MousePosition.y));
+        _ghosts = new GameObject[size];
 
-		int i = 0;
-		for (int y = 0; y < _sizeY; y++)
-		{
-			for (int x = 0; x < _sizeX; x++)
-			{
-				WorldTile tile = _world.GetTile((int)Clamp.x+x, (int)Clamp.y+y);
-				_ghosts[i].transform.position = new Vector2((int)Clamp.x + x, (int)Clamp.y + y);
+        for (var i = 0; i < size; i++) {
+            var o = new GameObject();
+            o.transform.parent = transform;
+            o.AddComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/DefaultTile");
+            o.GetComponent<SpriteRenderer>().sortingOrder = 1;
+            _ghosts[i] = o;
+        }
+    }
 
-				if (tile.Occupied == false)
-				{
-					_ghosts[i].GetComponent<SpriteRenderer>().color = Color.green;
-				}
-				else
-				{
-					_ghosts[i].GetComponent<SpriteRenderer>().color = Color.red;
-				}
+    private void CheckArea() {
+        Vector2 mousePosition = _camera.ScreenToWorldPoint(Input.mousePosition);
+        var clamp = new Vector2(Mathf.RoundToInt(mousePosition.x), Mathf.RoundToInt(mousePosition.y));
 
-				i++;
-			}
-		}
-
-
-		//Vector2 MousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-		//Vector2 Clamp = new Vector2(Mathf.RoundToInt(MousePosition.x), Mathf.RoundToInt(MousePosition.y));
-		//transform.position = Clamp;
-
-		////WorldTile tile = _world.GetTile((int)Clamp.x, (int)Clamp.y);
-
-		//if (tile.Occupied == false)
-		//{
-		//	_renderer.color = Color.green;
-		//}
-		//else
-		//{
-		//	_renderer.color = Color.red;
-		//}
-	}
+        var i = 0;
+        for (var y = 0; y < _sizeY; y++) {
+            for (var x = 0; x < _sizeX; x++) {
+                var tile = _world.GetTile((int) clamp.x + x, (int) clamp.y + y);
+                _ghosts[i].transform.position = new Vector2((int) clamp.x + x, (int) clamp.y + y);
+                _ghosts[i].GetComponent<SpriteRenderer>().color = tile.Occupied == false ? Color.green : Color.red;
+                i++;
+            }
+        }
+    }
 }
