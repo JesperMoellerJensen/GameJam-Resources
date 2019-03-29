@@ -5,7 +5,8 @@ using UnityEngine;
 public class WorldTile : MonoBehaviour {
     private Sprite _sprite;
 
-    public Vector2 Position;
+	public Vector2 Position;
+	public TileType TileType;
 
     public bool Occupied;
     private static float _s = World.WORLD_SIZE;
@@ -21,10 +22,29 @@ public class WorldTile : MonoBehaviour {
         }
     }
 
-    private void Start() {
-        Sprite = Resources.Load<Sprite>("Sprites/DebugSquare");
-        _playerTransform = GameObject.FindWithTag("Player").transform;
-    }
+	private void Start()
+	{
+		//Sprite = Resources.Load<Sprite>("Sprites/DebugMarsDirt");
+		DebugSetRandomTileType();
+		 _playerTransform = GameObject.FindWithTag("Player").transform;
+	}
+
+	//TODO: Remove this
+	//------ DEBUG -------
+	private void DebugSetRandomTileType()
+	{
+
+		if(Random.Range(0, 100) < 50)
+		{
+			Sprite = Resources.Load<Sprite>("Sprites/DebugMarsDirt");
+			TileType = TileType.MarsDirt;
+		}
+		else
+		{
+			Sprite = Resources.Load<Sprite>("Sprites/DebugGrass");
+			TileType = TileType.Grass;
+		}
+	}
 
     float dist(float a, float b) {
         return b - a;
@@ -47,3 +67,10 @@ public class WorldTile : MonoBehaviour {
         }
     }
 }
+
+public enum TileType
+{
+	MarsDirt = 0,
+	Grass
+}
+
