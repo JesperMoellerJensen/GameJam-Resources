@@ -5,7 +5,7 @@ using UnityEngine;
 public class World : MonoBehaviour {
     private WorldTile[,] _tileMap;
 
-    public int WORLD_SIZE = 10;
+    public static int WORLD_SIZE = 10;
     public GameObject TilePrefab;
 
     private void Start() {
