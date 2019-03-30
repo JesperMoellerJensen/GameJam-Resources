@@ -26,6 +26,7 @@ public enum ItemID
 [CreateAssetMenu(fileName = "Item", menuName = "Scriptable Objects/Item", order = 1)]
 public class Item : ScriptableObject
 {
+    public Sprite Image;
 	public ItemID ID;
 	public string DisplayName;
 	public string Description;

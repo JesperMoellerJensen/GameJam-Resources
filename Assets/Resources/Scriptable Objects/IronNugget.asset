@@ -10,9 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 896cebce915fd1a4b82e8b28b9a7d635, type: 3}
-  m_Name: IronOre
+  m_Name: IronNugget
   m_EditorClassIdentifier: 
+  Image: {fileID: 0}
   ID: 2
-  DisplayName: Iron Ore
+  DisplayName: Iron Nugget
   Description: An ore of iron.
   ResourceType: 1
