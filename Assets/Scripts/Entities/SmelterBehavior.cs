@@ -35,6 +35,7 @@ public class SmelterBehavior : EntityBehavior {
 
         currentSmeltingTime += Time.deltaTime;
         if (!(currentSmeltingTime >= smeltTimeOfItems[ItemToSmelt.Item.ID])) return;
+        Debug.Log($"{ItemToSmelt.StackSize}");
         SpawnBar();
         ItemToSmelt.StackSize--;
         currentSmeltingTime = 0;
@@ -99,7 +100,7 @@ public class SmelterBehavior : EntityBehavior {
     }
 
     public override void Interact(MouseInteract mouseInteract) {
-        Debug.Log("hello1");
+        Debug.Log("hello " + mouseInteract.SelectedItemSlot.Item + " " + mouseInteract.SelectedItemSlot.StackSize);
         if (RequiredItems.Count == 0) {
             OnAddItemToSmelter(mouseInteract);
         } else {
