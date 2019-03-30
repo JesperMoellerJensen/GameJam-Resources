@@ -15,8 +15,8 @@ TagManager:
   - 
   - Mouse
   - Player
-  - 
-  - 
+  - ItemPickup
+  - Entity
   - 
   - 
   - 
