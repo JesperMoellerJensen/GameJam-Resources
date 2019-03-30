@@ -22,6 +22,13 @@ public class EntityGhost : MonoBehaviour {
 
     private void Update() {
         if (!BuildMode) {
+            if (_ghosts != null) {
+                foreach (var ghost in _ghosts) {
+                    Destroy(ghost);
+                }
+                _ghosts = null;
+                
+            }
             return;
         }
         CheckArea(new[] { TileType.Grass });
@@ -35,6 +42,10 @@ public class EntityGhost : MonoBehaviour {
         _sizeX = x;
         _sizeY = y;
 
+        InitGhostTiles();
+    }
+
+    private void InitGhostTiles() {
         var size = _sizeX * _sizeY;
 
         _ghosts = new GameObject[size];
