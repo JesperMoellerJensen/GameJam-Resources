@@ -33,6 +33,11 @@ public class EntityGhost : MonoBehaviour {
         }
         CheckArea(new[] { TileType.MarsDirt });
 
+        if (_ghosts == null) {
+            InitGhostTiles();
+        }
+        CheckArea(new[] { TileType.MarsDirt });
+
         if (Input.GetButtonDown("Fire1") && _canPlace) {
             PlaceEntity();
         }
