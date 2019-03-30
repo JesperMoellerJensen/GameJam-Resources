@@ -15,21 +15,21 @@ public class EntityBehavior : MonoBehaviour {
     }
 
 
-    private void OnEnable() {
-        EventManager.AddListener("AddItemToEntity", OnInteract);
-    }
+    //private void OnEnable() {
+    //    EventManager.AddListener("AddItemToEntity", OnInteract);
+    //}
 
-    public object OnInteract(object eventArgs) {
-        object[] data = (object[])eventArgs;
-        GameObject entity = (GameObject)data[0];
+    //public object OnInteract(object eventArgs) {
+    //    object[] data = (object[])eventArgs;
+    //    GameObject entity = (GameObject)data[0];
 
-        if (entity == transform.root.gameObject) {
-            Item item = (Item)data[1];
-            int amount = (int)data[2];
+    //    if (entity == transform.root.gameObject) {
+    //        Item item = (Item)data[1];
+    //        int amount = (int)data[2];
 
-            Interact(item, amount)
-        } 
-    }
+    //        Interact(item, amount)
+    //    } 
+    //}
 
     public bool Interact(Item item, int amount) {
         if (RequiredItems.Count == 0) {
