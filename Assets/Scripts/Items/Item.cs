@@ -7,18 +7,20 @@ public enum ResourceType
 	Copper,
 	Iron,
 	Gold,
-	Wood
+	Wood,
+    Carbon
 }
 
 public enum ItemID
 {
-	CopperOre = 0,
+	CopperNugget = 0,
 	CopperBar = 1,
-	IronOre = 2,
+    IronNugget = 2,
 	IronBar = 3,
-	GoldOre = 4,
+    GoldNugget = 4,
 	GoldBar = 5,
-	Wood = 6
+	Wood = 6,
+    CarbonCrystal = 7
 }
 
 [CreateAssetMenu(fileName = "Item", menuName = "Scriptable Objects/Item", order = 1)]
