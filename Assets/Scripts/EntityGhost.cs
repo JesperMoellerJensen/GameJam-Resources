@@ -31,6 +31,9 @@ public class EntityGhost : MonoBehaviour {
             }
             return;
         }
+        if (_ghosts == null) {
+            InitGhostTiles();
+        }
         CheckArea(new[] { TileType.MarsDirt });
 
         if (_ghosts == null) {
