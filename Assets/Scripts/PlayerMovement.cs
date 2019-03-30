@@ -14,7 +14,7 @@ public class PlayerMovement : MonoBehaviour {
         _animator = GetComponentInChildren<Animator>();
     }
     private void Update() {
-        _moveDir = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized * Speed * Time.deltaTime;
+        _moveDir = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized * Speed;
         _rb.velocity = _moveDir;
         _animator.SetFloat("Speed", Mathf.Abs(_moveDir.magnitude));
 
