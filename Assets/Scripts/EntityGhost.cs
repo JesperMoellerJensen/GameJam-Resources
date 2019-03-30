@@ -21,6 +21,11 @@ public class EntityGhost : MonoBehaviour {
     }
 
     private void Update() {
+        if (Input.GetKeyDown(KeyCode.B)) {
+            BuildMode = !BuildMode;
+        }
+
+
         if (!BuildMode) {
             if (_ghosts != null) {
                 foreach (var ghost in _ghosts) {

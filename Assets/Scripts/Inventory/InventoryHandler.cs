@@ -27,7 +27,6 @@ public class InventoryHandler : MonoBehaviour
             _selectedIndex = Mathf.Clamp(value, 0, EquippedInventorySize - 1);
 
             OnChangedSelectedSlot?.Invoke(_selectedIndex, Inventory[_selectedIndex]);
-            OnRemoveItems(_selectedIndex, 0);
         }
     }
 
@@ -137,16 +136,20 @@ public class InventoryHandler : MonoBehaviour
             slot.StackSize -= amount;
 
             if (amount <= 0 || slot.StackSize <= 0) {
-                slot = null;
+                Inventory[index] = null;
             }
         }
+
+        UpdatedInventory(Inventory.ToList());
     }
 
     private void OnMoveItem(int indexFrom, int indexTo) {
+        UpdatedInventory(Inventory.ToList());
 
     }
 
     private void OnUseItem(int indexFrom) {
+        UpdatedInventory(Inventory.ToList());
 
     }
 
@@ -156,5 +159,6 @@ public class InventoryHandler : MonoBehaviour
     private void DropItemInWorld(Item item) {
         GameObject o = (GameObject)Instantiate(Resources.Load($"Prefabs/Items/{item.ID}"));
         o.transform.position = GameObject.FindGameObjectWithTag("Player").transform.position;
+        UpdatedInventory(Inventory.ToList());
     }
 }
