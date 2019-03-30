@@ -143,8 +143,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 203bdf1ddc270f24c9ab1a4085c30669, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SelectedItem: {fileID: 0}
-  ItemStack: 0
+  SelectedItem: {fileID: 11400000, guid: 7223b9c6cd556c5408fb4e90c313c697, type: 2}
+  ItemStack: 1
   LayerMask:
     serializedVersion: 2
     m_Bits: 256

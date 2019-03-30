@@ -36,6 +36,7 @@ public class SmelterBehavior : EntityBehavior {
 
         currentSmeltingTime += Time.deltaTime;
         if (!(currentSmeltingTime >= smeltTimeOfItems[ItemToSmelt.ID])) return;
+        Debug.Log("smelted");
         ItemsInSmelter--;
         currentSmeltingTime = 0;
 
