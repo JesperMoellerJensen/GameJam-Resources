@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 
-public class WorldTile : MonoBehaviour {
-    private Sprite _sprite;
+public class WorldTile : MonoBehaviour
+{
+	private Sprite _sprite;
 
 	public Vector2 Position;
 	public TileType TileType;
@@ -12,19 +13,50 @@ public class WorldTile : MonoBehaviour {
     private readonly int _y = Mathf.RoundToInt(_s / 2);
     private Transform _playerTransform;
 
-    public Sprite Sprite {
-        get { return _sprite; }
-        set {
-            _sprite = value;
-            GetComponent<SpriteRenderer>().sprite = _sprite;
-        }
-    }
+	public Sprite Sprite
+	{
+		get { return _sprite; }
+		set
+		{
+			_sprite = value;
+			GetComponent<SpriteRenderer>().sprite = _sprite;
+		}
+	}
 
 	private void Start()
 	{
 		//Sprite = Resources.Load<Sprite>("Sprites/DebugMarsDirt");
 		DebugSetRandomTileType();
-		 _playerTransform = GameObject.FindWithTag("Player").transform;
+		_playerTransform = GameObject.FindWithTag("Player").transform;
+	}
+
+	float Dist(float a, float b)
+	{
+		return b - a;
+	}
+
+	private void Update()
+	{
+		var playerPosition = _playerTransform.position;
+		var px = playerPosition.x;
+		var py = playerPosition.y;
+		if (Dist(px, transform.position.x) > _x)
+		{
+			transform.Translate(new Vector3(-_s, 0, 0));
+		}
+		else if (Dist(px, transform.position.x) < -_x)
+		{
+			transform.Translate(new Vector3(_s, 0, 0));
+		}
+
+		if (py - transform.position.y < -_y)
+		{
+			transform.Translate(new Vector3(0, -_s, 0));
+		}
+		else if (py - transform.position.y > _y)
+		{
+			transform.Translate(new Vector3(0, _s, 0));
+		}
 	}
 
 	//TODO: Remove this
@@ -32,7 +64,7 @@ public class WorldTile : MonoBehaviour {
 	private void DebugSetRandomTileType()
 	{
 
-		if(Random.Range(0, 100) < 50)
+		if (Random.Range(0, 100) < 50)
 		{
 			Sprite = Resources.Load<Sprite>("Sprites/DebugMarsDirt");
 			TileType = TileType.MarsDirt;
@@ -43,27 +75,6 @@ public class WorldTile : MonoBehaviour {
 			TileType = TileType.Grass;
 		}
 	}
-
-    float dist(float a, float b) {
-        return b - a;
-    }
-
-    private void Update() {
-        var playerPosition = _playerTransform.position;
-        var px = playerPosition.x - _s / 2;
-        var py = playerPosition.y - _s / 2;
-        if (dist(px, transform.position.x) > _x) {
-            transform.Translate(new Vector3(-_s, 0, 0));
-        } else if (dist(px, transform.position.x) < -_x) {
-            transform.Translate(new Vector3(_s, 0, 0));
-        }
-
-        if (py - transform.position.y < -_y) {
-            transform.Translate(new Vector3(0, -_s, 0));
-        } else if (py - transform.position.y > _y) {
-            transform.Translate(new Vector3(0, _s, 0));
-        }
-    }
 }
 
 public enum TileType

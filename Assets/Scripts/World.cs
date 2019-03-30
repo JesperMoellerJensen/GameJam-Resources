@@ -3,7 +3,7 @@
 public class World : MonoBehaviour {
     private WorldTile[,] _tileMap;
 
-    public const int WorldSize = 10;
+    public const int WorldSize = 100;
     public GameObject TilePrefab;
 
     private void Start() {
