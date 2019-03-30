@@ -6,11 +6,12 @@ public class EntityGhost : MonoBehaviour {
     private int _sizeX;
     private int _sizeY;
 
-    private UnityEngine.GameObject[] _ghosts;
+    private GameObject[] _ghosts;
     private WorldTile[] _tiles;
     private Camera _camera;
 
     private bool _canPlace;
+    public bool BuildMode;
 
     private void Start() {
         _camera = Camera.main;
@@ -20,7 +21,22 @@ public class EntityGhost : MonoBehaviour {
     }
 
     private void Update() {
-        CheckArea(new[] { TileType.Grass });
+        if (!BuildMode) {
+            if (_ghosts != null) {
+                foreach (var ghost in _ghosts) {
+                    Destroy(ghost);
+                }
+                _ghosts = null;
+                
+            }
+            return;
+        }
+        CheckArea(new[] { TileType.MarsDirt });
+
+        if (_ghosts == null) {
+            InitGhostTiles();
+        }
+        CheckArea(new[] { TileType.MarsDirt });
 
         if (Input.GetButtonDown("Fire1") && _canPlace) {
             PlaceEntity();
@@ -31,16 +47,20 @@ public class EntityGhost : MonoBehaviour {
         _sizeX = x;
         _sizeY = y;
 
+        InitGhostTiles();
+    }
+
+    private void InitGhostTiles() {
         var size = _sizeX * _sizeY;
 
-        _ghosts = new UnityEngine.GameObject[size];
+        _ghosts = new GameObject[size];
         _tiles = new WorldTile[size];
 
 
         for (var i = 0; i < size; i++) {
-            var o = new UnityEngine.GameObject();
+            var o = new GameObject();
             o.transform.parent = transform;
-            o.AddComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/DefaultTile");
+            o.AddComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Debug/DefaultTile");
             o.GetComponent<SpriteRenderer>().sortingOrder = 1;
             _ghosts[i] = o;
         }
@@ -57,10 +77,11 @@ public class EntityGhost : MonoBehaviour {
                 var tile = _world.GetTileFromWorldPosition(clamp.x + x, clamp.y + y);
                 _ghosts[i].transform.position = new Vector3((int)clamp.x + x, (int)clamp.y + y,0);
 
+                var spriteRenderer = _ghosts[i].GetComponent<SpriteRenderer>();
                 if (tile.Occupied == false && allowedTileTypes.Contains(tile.TileType)) {
-                    _ghosts[i].GetComponent<SpriteRenderer>().color = new Color(0, 1, 0, 0.5f);
+                    spriteRenderer.color = new Color(0, 1, 0, 0.5f);
                 } else {
-                    _ghosts[i].GetComponent<SpriteRenderer>().color = new Color(1, 0, 0, 0.5f);
+                    spriteRenderer.color = new Color(1, 0, 0, 0.5f);
                     _canPlace = false;
                 }
                 _tiles[i] = tile;
@@ -70,12 +91,11 @@ public class EntityGhost : MonoBehaviour {
     }
 
     private void PlaceEntity() {
-        foreach (WorldTile tile in _tiles) {
-            tile.Occupied = true;
-
-            //TODO: Place actual entity
-        }
-        UnityEngine.GameObject e = (UnityEngine.GameObject)Instantiate(Resources.Load("Prefabs/Smelter"));
+        var e = Instantiate(Resources.Load<GameObject>("Prefabs/Smelter"));
         e.transform.position = _tiles[0].transform.position + new Vector3(0.5f,0.5f);
+        foreach (WorldTile tile in _tiles) {
+            tile.Entity = e;
+        }
+        
     }
 }

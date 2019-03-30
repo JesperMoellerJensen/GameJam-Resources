@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class WorldTile : MonoBehaviour {
     private Sprite _sprite;
@@ -6,11 +8,12 @@ public class WorldTile : MonoBehaviour {
     public Vector2 Position;
     public TileType TileType;
 
-    public bool Occupied;
+    [NonSerialized] public bool Occupied;
     private static float _s = World.WorldSize;
     private readonly int _x = Mathf.RoundToInt(_s / 2);
     private readonly int _y = Mathf.RoundToInt(_s / 2);
     private Transform _playerTransform;
+    private GameObject _entity;
 
     public Sprite Sprite {
         get { return _sprite; }
@@ -20,10 +23,18 @@ public class WorldTile : MonoBehaviour {
         }
     }
 
+    public GameObject Entity {
+        get { return _entity; }
+        set {
+            _entity = value;
+            Occupied = value != null;
+        }
+    }
+
     private void Start() {
         //Sprite = Resources.Load<Sprite>("Sprites/DebugMarsDirt");
         DebugSetRandomTileType();
-        _playerTransform = UnityEngine.GameObject.FindWithTag("Player").transform;
+        _playerTransform = GameObject.FindWithTag("Player").transform;
         InvokeRepeating("UpdatePosition", 0,2);
     }
 
@@ -52,8 +63,8 @@ public class WorldTile : MonoBehaviour {
     //------ DEBUG -------
     private void DebugSetRandomTileType() {
 
-        if (Random.Range(0, 100) < 50) {
-            Sprite = Resources.Load<Sprite>("Sprites/DebugMarsDirt");
+        if (Random.Range(0, 100) < 110) {
+            Sprite = Resources.Load<Sprite>("Sprites/Tiles/MarsGround_" + Random.Range(0,8));
             TileType = TileType.MarsDirt;
         } else {
             Sprite = Resources.Load<Sprite>("Sprites/DebugGrass");

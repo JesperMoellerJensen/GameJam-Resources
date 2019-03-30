@@ -68,7 +68,6 @@ GameObject:
   - component: {fileID: 5929628746713968087}
   - component: {fileID: 5929628746713968084}
   - component: {fileID: 5929628746713968081}
-  - component: {fileID: 4705338178375974192}
   - component: {fileID: 5929628746713968086}
   m_Layer: 0
   m_Name: Smelter
@@ -147,29 +146,15 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5929628746713968085}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5293c7aa2496e034daa9fbdd055b3497, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ItemToSmelt: {fileID: 0}
   ItemsInSmelter: 0
+  RequiredItems: []
   isSmelting: 0
---- !u!114 &4705338178375974192
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5929628746713968085}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8c70643b066fae345a2c0d7c45c5e5e0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Script: {fileID: 5929628746713968081}
-  RequiredItems:
-  - {fileID: 11400000, guid: 7223b9c6cd556c5408fb4e90c313c697, type: 2}
 --- !u!61 &5929628746713968086
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -177,7 +162,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5929628746713968085}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0

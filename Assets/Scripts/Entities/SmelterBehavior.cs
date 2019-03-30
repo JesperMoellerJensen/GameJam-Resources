@@ -3,26 +3,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SmelterBehavior : MonoBehaviour {
-    public static Func<GameObject, Item, bool> AddItemToSmelter;
-
+public class SmelterBehavior : EntityBehavior {
     public Item ItemToSmelt;
     public int ItemsInSmelter;
+    public List<Item> RequiredItems;
 
-    [SerializeField]
-    private bool isSmelting = false;
+    [SerializeField] private bool isSmelting = false;
     private float currentSmeltingTime = 0;
 
     private Dictionary<ItemID, float> smeltTimeOfItems;
-
 
     // Start is called before the first frame update
     void Start() {
         ItemToSmelt = null;
         ItemsInSmelter = 0;
 
-        smeltTimeOfItems = new Dictionary<ItemID, float>()
-        {
+        smeltTimeOfItems = new Dictionary<ItemID, float>() {
             {ItemID.CopperNugget, 5f},
             {ItemID.IronNugget, 5f},
             {ItemID.GoldNugget, 5f}
@@ -35,63 +31,81 @@ public class SmelterBehavior : MonoBehaviour {
             return;
         }
 
-        if (ItemsInSmelter > 0) {
-            isSmelting = true;
+        if (ItemsInSmelter <= 0) return;
+        isSmelting = true;
 
-            currentSmeltingTime += Time.deltaTime;
-            if (currentSmeltingTime >= smeltTimeOfItems[ItemToSmelt.ID]) {
-                ItemsInSmelter--;
-                currentSmeltingTime = 0;
+        currentSmeltingTime += Time.deltaTime;
+        if (!(currentSmeltingTime >= smeltTimeOfItems[ItemToSmelt.ID])) return;
+        ItemsInSmelter--;
+        currentSmeltingTime = 0;
 
-                if (ItemsInSmelter == 0) {
-                    isSmelting = false;
-                    ItemToSmelt = null;
-                }
+        if (ItemsInSmelter != 0) return;
+        isSmelting = false;
+        ItemToSmelt = null;
+    }
+
+    private void OnAddItemToSmelter(MouseInteract mouseInteract) {
+        if (mouseInteract.SelectedItem == null) {
+            RemoveFromSmelter(mouseInteract, ItemToSmelt, ItemsInSmelter);
+            return;
+        }
+
+        if (CanBeSmelted(mouseInteract.SelectedItem) == false) {
+            return;
+        }
+
+        if (ItemToSmelt == null) {
+            AddToSmelter(mouseInteract);
+            return;
+        }
+
+        if (ItemToSmelt.ID == mouseInteract.SelectedItem.ID) {
+            AddSameToSmelter(mouseInteract);
+            return;
+        }
+
+        Replace(mouseInteract);
+    }
+
+    private bool CanBeSmelted(Item selectedItem) {
+        return smeltTimeOfItems.ContainsKey(selectedItem.ID);
+    }
+
+    private void Replace(MouseInteract mouseInteract) {
+        var t = ItemToSmelt;
+        var t2 = ItemsInSmelter;
+        AddToSmelter(mouseInteract);
+        RemoveFromSmelter(mouseInteract, t, t2);
+    }
+
+    private void AddSameToSmelter(MouseInteract mouseInteract) {
+        ItemsInSmelter += mouseInteract.ItemStack;
+        mouseInteract.ItemStack = 0;
+        mouseInteract.SelectedItem = null;
+    }
+
+    private void AddToSmelter(MouseInteract mouseInteract) {
+        ItemToSmelt = mouseInteract.SelectedItem;
+        ItemsInSmelter = mouseInteract.ItemStack;
+        mouseInteract.SelectedItem = null;
+        mouseInteract.ItemStack = 0;
+    }
+
+    private void RemoveFromSmelter(MouseInteract mouseInteract, Item itemToSmelt, int itemsInSmelter) {
+        mouseInteract.SelectedItem = itemToSmelt;
+        mouseInteract.ItemStack = itemsInSmelter;
+        ItemToSmelt = null;
+        ItemsInSmelter = 0;
+    }
+
+    public override void Interact(MouseInteract mouseInteract) {
+        Debug.Log("hello1");
+        if (RequiredItems.Count == 0) {
+            OnAddItemToSmelter(mouseInteract);
+        } else {
+            if (RequiredItems.Contains(mouseInteract.SelectedItem)) {
+                RequiredItems.Remove(mouseInteract.SelectedItem);
             }
         }
-    }
-
-    private void OnEnable() {
-        AddItemToSmelter += OnAddItemToSmelter;
-    }
-
-    private void OnDisable() {
-        AddItemToSmelter -= OnAddItemToSmelter;
-    }
-
-    private bool OnAddItemToSmelter(GameObject smelter, Item itemToSmelt) {
-        if (ItemToSmelt != null) {
-            return false;
-        }
-
-        if (smelter == this.gameObject) {
-            if (VerifyResource(itemToSmelt)) {
-                if (ItemsInSmelter == 0) {
-                    currentSmeltingTime = 0;
-                }
-
-                ItemToSmelt = itemToSmelt;
-                ItemsInSmelter++;
-
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private void OnRemoveItemsInSmelter() {
-
-    }
-
-
-    public bool VerifyResource(Item item) {
-        for (int i = 0; i < smeltTimeOfItems.Count; i++) {
-            if (smeltTimeOfItems.ContainsKey(item.ID)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }
