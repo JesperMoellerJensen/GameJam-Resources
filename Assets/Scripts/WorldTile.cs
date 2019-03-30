@@ -63,8 +63,8 @@ public class WorldTile : MonoBehaviour {
     //------ DEBUG -------
     private void DebugSetRandomTileType() {
 
-        if (Random.Range(0, 100) < 50) {
-            Sprite = Resources.Load<Sprite>("Sprites/DebugMarsDirt");
+        if (Random.Range(0, 100) < 110) {
+            Sprite = Resources.Load<Sprite>("Sprites/Tiles/MarsGround_" + Random.Range(0,8));
             TileType = TileType.MarsDirt;
         } else {
             Sprite = Resources.Load<Sprite>("Sprites/DebugGrass");
