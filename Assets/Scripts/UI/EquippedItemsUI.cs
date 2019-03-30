@@ -32,15 +32,16 @@ public class EquippedItemsUI : MonoBehaviour
         SelectedSlot.transform.position = slots[index].transform.position;
     }
 
-    void ChangeEquippedItem(int index, ItemSlot item) {
-        
-
+    void ChangeEquippedItem(int index, ItemSlot itemSlot) {
+        GameObject slot = slots[index];
+        slot.GetComponent<SpriteRenderer>().sprite = itemSlot?.Item.Image;
+        slot.GetComponentInChildren<TextMesh>().text = itemSlot.StackSize > 1 ? itemSlot.StackSize + "" : "";
 
     }
 
     void GenerateItemSlots(int inventorySize) {
         float startPos = inventorySize / 2 - inventorySize;
-        startPos += inventorySize % 2 == 0 ? 0.5f : 0;
+        startPos += inventorySize % 2 == 0 ? 0.5f : 1f;
 
         slots = new List<GameObject>();
         for (int i = 0; i < inventorySize; i++) {
