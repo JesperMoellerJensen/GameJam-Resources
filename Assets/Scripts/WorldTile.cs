@@ -23,8 +23,8 @@ public class WorldTile : MonoBehaviour {
     private void Start() {
         //Sprite = Resources.Load<Sprite>("Sprites/DebugMarsDirt");
         DebugSetRandomTileType();
-        _playerTransform = GameObject.FindWithTag("Player").transform;
-        InvokeRepeating("UpdatePosition", Random.Range(0, 5), 2);
+        _playerTransform = UnityEngine.GameObject.FindWithTag("Player").transform;
+        InvokeRepeating("UpdatePosition", 0,2);
     }
 
     float Dist(float a, float b) {

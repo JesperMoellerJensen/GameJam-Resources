@@ -4,7 +4,7 @@ public class World : MonoBehaviour {
     private WorldTile[,] _tileMap;
 
     public const int WorldSize = 100;
-    public GameObject TilePrefab;
+    public UnityEngine.GameObject TilePrefab;
 
     private void Start() {
         _tileMap = new WorldTile[WorldSize, WorldSize];

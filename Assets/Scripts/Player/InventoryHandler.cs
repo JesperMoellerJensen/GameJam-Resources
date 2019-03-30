@@ -71,7 +71,7 @@ public class InventoryHandler : MonoBehaviour
     #endregion
 
     private void DropItemInWorld(Item item) {
-        GameObject o = (GameObject)Instantiate(Resources.Load($"Prefabs/Items/{item.ID}"));
-        o.transform.position = GameObject.FindGameObjectWithTag("Player").transform.position;
+        UnityEngine.GameObject o = (UnityEngine.GameObject)Instantiate(Resources.Load($"Prefabs/Items/{item.ID}"));
+        o.transform.position = UnityEngine.GameObject.FindGameObjectWithTag("Player").transform.position;
     }
 }
