@@ -10,14 +10,18 @@ public class EntityGhost : MonoBehaviour {
     private WorldTile[] _tiles;
     private Camera _camera;
 
+    private GameObject _entityType;
+    private Vector3 _entityOffset;
+
     private bool _canPlace;
     public bool BuildMode;
 
     private void Start() {
         _camera = Camera.main;
         _world = FindObjectOfType<World>();
-
         SetGhostSize(2, 1);
+        _entityOffset = new Vector3(0.5f, 0.5f);
+        _entityType = Resources.Load<GameObject>("Prefabs/Smelter");
     }
 
     private void Update() {
@@ -27,15 +31,24 @@ public class EntityGhost : MonoBehaviour {
 
 
         if (!BuildMode) {
-            if (_ghosts != null) {
-                foreach (var ghost in _ghosts) {
-                    Destroy(ghost);
-                }
-                _ghosts = null;
-                
-            }
+            CleanUpGhosts();
             return;
         }
+
+        if (Input.GetKeyDown(KeyCode.Alpha1)) {
+            CleanUpGhosts();
+            SetGhostSize(2, 1);
+            _entityType = Resources.Load<GameObject>("Prefabs/Smelter");
+            _entityOffset = new Vector3(0.5f, 0.5f);
+
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2)) {
+            CleanUpGhosts();
+            SetGhostSize(3, 2);
+            _entityType = Resources.Load<GameObject>("Prefabs/OxygenBank");
+            _entityOffset = new Vector3(1f, 0.5f);
+        }
+
         if (_ghosts == null) {
             InitGhostTiles();
         }
@@ -48,6 +61,16 @@ public class EntityGhost : MonoBehaviour {
 
         if (Input.GetButtonDown("Fire1") && _canPlace) {
             PlaceEntity();
+        }
+    }
+
+    private void CleanUpGhosts() {
+        if (_ghosts != null) {
+            foreach (var ghost in _ghosts) {
+                Destroy(ghost);
+            }
+            _ghosts = null;
+
         }
     }
 
@@ -83,7 +106,7 @@ public class EntityGhost : MonoBehaviour {
         for (var y = 0; y < _sizeY; y++) {
             for (var x = 0; x < _sizeX; x++) {
                 var tile = _world.GetTileFromWorldPosition(clamp.x + x, clamp.y + y);
-                _ghosts[i].transform.position = new Vector3((int)clamp.x + x, (int)clamp.y + y,0);
+                _ghosts[i].transform.position = new Vector3((int)clamp.x + x, (int)clamp.y + y, 0);
 
                 var spriteRenderer = _ghosts[i].GetComponent<SpriteRenderer>();
                 if (tile.Occupied == false && allowedTileTypes.Contains(tile.TileType)) {
@@ -99,11 +122,11 @@ public class EntityGhost : MonoBehaviour {
     }
 
     private void PlaceEntity() {
-        var e = Instantiate(Resources.Load<GameObject>("Prefabs/Smelter"));
-        e.transform.position = _tiles[0].transform.position + new Vector3(0.5f,0.5f);
+        var e = Instantiate(_entityType);
+        e.transform.position = _tiles[0].transform.position + _entityOffset;
         foreach (WorldTile tile in _tiles) {
             tile.Entity = e;
         }
-        
+
     }
 }
