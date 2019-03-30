@@ -1,10 +1,11 @@
+using System;
 using UnityEngine;
 
 public class World : MonoBehaviour {
     private WorldTile[,] _tileMap;
 
     public const int WorldSize = 100;
-    public UnityEngine.GameObject TilePrefab;
+    public GameObject TilePrefab;
 
     private void Start() {
         _tileMap = new WorldTile[WorldSize, WorldSize];
@@ -28,8 +29,13 @@ public class World : MonoBehaviour {
     }
 
     public WorldTile GetTileFromWorldPosition(float x, float y) {
+        var i = X2(x, y);
+        return _tileMap[i.x, i.y];
+    }
+
+    private static Vector2Int X2(float x, float y) {
         var x2 = Mathf.RoundToInt(x).Mod(WorldSize);
         var y2 = Mathf.RoundToInt(y).Mod(WorldSize);
-        return _tileMap[x2, y2];
+        return new Vector2Int(x2, y2);
     }
 }
