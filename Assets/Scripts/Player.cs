@@ -1,12 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [RequireComponent(typeof(PlayerOxygenTank))]
 public class Player : MonoBehaviour {
     public float MaxHealth;
     public float OxygenTickSpeed;
-    public float OxygenConsumptionn;
+    [FormerlySerializedAs("OxygenConsumptionn")] public float OxygenConsumption;
     public float NoOxygenDamage;
 
     private PlayerOxygenTank _oxygenTank;
@@ -19,7 +18,7 @@ public class Player : MonoBehaviour {
     private void Start() {
         _oxygenTank = GetComponent<PlayerOxygenTank>();
 
-        InvokeRepeating("UseOxygen", 0, OxygenTickSpeed);
+        InvokeRepeating(nameof(UseOxygen), 0, OxygenTickSpeed);
     }
 
     public void TakeDamage(float amount) {
@@ -31,7 +30,7 @@ public class Player : MonoBehaviour {
     }
 
     private void UseOxygen() {
-        if (_oxygenTank.UseOxygen(OxygenConsumptionn)) {
+        if (_oxygenTank.UseOxygen(OxygenConsumption)) {
             Debug.Log($"I can breathe, and i have {_oxygenTank.CurrentCapacity}");
         } else {
             Debug.Log("I CANT BREATHE!");
