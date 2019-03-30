@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 896cebce915fd1a4b82e8b28b9a7d635, type: 3}
   m_Name: IronNugget
   m_EditorClassIdentifier: 
-  Image: {fileID: 0}
+  Image: {fileID: 21300000, guid: 2531650a4963b904fb4f9735b94dad3a, type: 3}
   ID: 2
   DisplayName: Iron Nugget
   Description: An ore of iron.
