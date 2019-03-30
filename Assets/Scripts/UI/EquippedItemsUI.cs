@@ -40,8 +40,15 @@ public class EquippedItemsUI : MonoBehaviour
 
         for (int i = 0; i < InventoryHandler.EquippedInventorySize; i++) {
             GameObject slot = slots[i];
-            slot.GetComponent<SpriteRenderer>().sprite = inventory[i].Item.Image;
-            slot.GetComponentInChildren<TextMesh>().text = inventory[i].StackSize > 1 ? inventory[i].StackSize + "" : "";
+
+            if(inventory[i] != null) {
+                slot.GetComponent<SpriteRenderer>().sprite = inventory[i].Item.Image;
+                slot.GetComponentInChildren<TextMesh>().text = inventory[i].StackSize > 1 ? inventory[i].StackSize + "" : "";
+            }
+            else {
+                slot.GetComponent<SpriteRenderer>().sprite = null;
+                slot.GetComponentInChildren<TextMesh>().text = "";
+            }
         }
     }
 

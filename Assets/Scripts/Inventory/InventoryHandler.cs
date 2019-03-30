@@ -17,9 +17,9 @@ public class InventoryHandler : MonoBehaviour
     public static Action<int, int> MoveItem;
     public static Action<int> UseItem;
 
-    public int Capacity = 32;
+    public static readonly int Capacity = 32;
 
-    private List<ItemSlot> Inventory;
+    private ItemSlot[] Inventory;
 
     private int _selectedIndex;
     private int SelectedIndex { get { return _selectedIndex; }
@@ -35,7 +35,7 @@ public class InventoryHandler : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Inventory = new List<ItemSlot>();
+        Inventory = new ItemSlot[Capacity];
 
         OnAddItem((Item)Resources.Load("Scriptable Objects/IronNugget"), 1);
         OnAddItem((Item)Resources.Load("Scriptable Objects/IronNugget"), 2);
@@ -117,19 +117,15 @@ public class InventoryHandler : MonoBehaviour
     #region Custom Events
     private void OnAddItem(Item item, int stackSize) {
 
-        // If inventory is not full
-        if(Inventory.Count < Capacity) {
+        // Find the first available slot, and add the item to it. 
+        for (int i = 0; i < Capacity; i++) {
+            if(Inventory[i] == null) {
+                ItemSlot itemSlot = new ItemSlot(item, stackSize);
+                Inventory[i] = itemSlot;
 
-            // Find the first available slot, and add the item to it. 
-            for (int i = 0; i < Capacity; i++) {
-                if(Inventory[i] == null) {
-                    ItemSlot itemSlot = new ItemSlot(item, stackSize);
-                    Inventory.Add(itemSlot);
+                UpdatedInventory(Inventory.ToList());
 
-                    UpdatedInventory(Inventory);
-
-                    break;
-                }
+                break;
             }
         }
     }
