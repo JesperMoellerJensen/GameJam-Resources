@@ -31,69 +31,81 @@ public class SmelterBehavior : EntityBehavior {
             return;
         }
 
-        if (ItemsInSmelter > 0) {
-            isSmelting = true;
+        if (ItemsInSmelter <= 0) return;
+        isSmelting = true;
 
-            currentSmeltingTime += Time.deltaTime;
-            if (currentSmeltingTime >= smeltTimeOfItems[ItemToSmelt.ID]) {
-                ItemsInSmelter--;
-                currentSmeltingTime = 0;
+        currentSmeltingTime += Time.deltaTime;
+        if (!(currentSmeltingTime >= smeltTimeOfItems[ItemToSmelt.ID])) return;
+        ItemsInSmelter--;
+        currentSmeltingTime = 0;
 
-                if (ItemsInSmelter == 0) {
-                    isSmelting = false;
-                    ItemToSmelt = null;
-                }
-            }
-        }
+        if (ItemsInSmelter != 0) return;
+        isSmelting = false;
+        ItemToSmelt = null;
     }
 
-    private bool OnAddItemToSmelter(Item itemToSmelt) {
-        Debug.Log("hello");
-        if (ItemToSmelt != null) {
-            return false;
+    private void OnAddItemToSmelter(MouseInteract mouseInteract) {
+        if (mouseInteract.SelectedItem == null) {
+            RemoveFromSmelter(mouseInteract, ItemToSmelt, ItemsInSmelter);
+            return;
         }
 
-
-        if (VerifyResource(itemToSmelt)) {
-            if (ItemsInSmelter == 0) {
-                currentSmeltingTime = 0;
-            }
-
-            ItemToSmelt = itemToSmelt;
-            ItemsInSmelter++;
-
-            return true;
+        if (CanBeSmelted(mouseInteract.SelectedItem) == false) {
+            return;
         }
 
-        return false;
+        if (ItemToSmelt == null) {
+            AddToSmelter(mouseInteract);
+            return;
+        }
+
+        if (ItemToSmelt.ID == mouseInteract.SelectedItem.ID) {
+            AddSameToSmelter(mouseInteract);
+            return;
+        }
+
+        Replace(mouseInteract);
     }
 
-    public override bool Interact(Item item, int amount) {
+    private bool CanBeSmelted(Item selectedItem) {
+        return smeltTimeOfItems.ContainsKey(selectedItem.ID);
+    }
+
+    private void Replace(MouseInteract mouseInteract) {
+        var t = ItemToSmelt;
+        var t2 = ItemsInSmelter;
+        AddToSmelter(mouseInteract);
+        RemoveFromSmelter(mouseInteract, t, t2);
+    }
+
+    private void AddSameToSmelter(MouseInteract mouseInteract) {
+        ItemsInSmelter += mouseInteract.ItemStack;
+        mouseInteract.ItemStack = 0;
+        mouseInteract.SelectedItem = null;
+    }
+
+    private void AddToSmelter(MouseInteract mouseInteract) {
+        ItemToSmelt = mouseInteract.SelectedItem;
+        ItemsInSmelter = mouseInteract.ItemStack;
+        mouseInteract.SelectedItem = null;
+        mouseInteract.ItemStack = 0;
+    }
+
+    private void RemoveFromSmelter(MouseInteract mouseInteract, Item itemToSmelt, int itemsInSmelter) {
+        mouseInteract.SelectedItem = itemToSmelt;
+        mouseInteract.ItemStack = itemsInSmelter;
+        ItemToSmelt = null;
+        ItemsInSmelter = 0;
+    }
+
+    public override void Interact(MouseInteract mouseInteract) {
         Debug.Log("hello1");
         if (RequiredItems.Count == 0) {
-            InteractWithEntity(item, amount);
+            OnAddItemToSmelter(mouseInteract);
         } else {
-            if (RequiredItems.Contains(item)) {
-                RequiredItems.Remove(item);
-                return true;
+            if (RequiredItems.Contains(mouseInteract.SelectedItem)) {
+                RequiredItems.Remove(mouseInteract.SelectedItem);
             }
         }
-
-        return false;
-    }
-
-    private void InteractWithEntity(Item item, int amount) {
-        OnAddItemToSmelter(item);
-    }
-
-
-    public bool VerifyResource(Item item) {
-        for (int i = 0; i < smeltTimeOfItems.Count; i++) {
-            if (smeltTimeOfItems.ContainsKey(item.ID)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

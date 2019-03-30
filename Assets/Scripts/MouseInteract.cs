@@ -25,12 +25,7 @@ public class MouseInteract : MonoBehaviour {
         if (Input.GetButtonDown("Fire1")) {
             var position = transform.position;
             var tile = World.GetTileFromWorldPosition(position.x, position.y);
-            Debug.Log("hello0");
-            var didUseItems = tile.Entity.GetComponent<EntityBehavior>().Interact(SelectedItem, ItemStack);
-            if (didUseItems) {
-                SelectedItem = null;
-                ItemStack = 0;
-            }
+            if (tile.Entity != null) tile.Entity.GetComponent<EntityBehavior>().Interact(this);
         }
     }
 
