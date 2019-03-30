@@ -1,23 +1,22 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class World : MonoBehaviour {
     private WorldTile[,] _tileMap;
 
-    public static int WORLD_SIZE = 10;
+    public const int WorldSize = 10;
     public GameObject TilePrefab;
 
     private void Start() {
-        _tileMap = new WorldTile[WORLD_SIZE, WORLD_SIZE];
+        _tileMap = new WorldTile[WorldSize, WorldSize];
         InitializeTiles();
     }
 
 
     private void InitializeTiles() {
-        for (int y = 0; y < WORLD_SIZE; y++) {
-            for (int x = 0; x < WORLD_SIZE; x++) {
-                _tileMap[x, y] = Instantiate(TilePrefab, new Vector2(x, y), transform.rotation, transform)
+        for (var y = 0; y < WorldSize; y++) {
+            for (var x = 0; x < WorldSize; x++) {
+                var transform1 = transform;
+                _tileMap[x, y] = Instantiate(TilePrefab, new Vector2(x, y), transform1.rotation, transform1)
                     .GetComponent<WorldTile>();
             }
         }
@@ -28,8 +27,8 @@ public class World : MonoBehaviour {
     }
 
     public WorldTile GetTileFromWorldPosition(float x, float y) {
-        var x2 = Mathf.RoundToInt(x).Mod(WORLD_SIZE);
-        var y2 = Mathf.RoundToInt(y).Mod(WORLD_SIZE);
+        var x2 = Mathf.RoundToInt(x).Mod(WorldSize);
+        var y2 = Mathf.RoundToInt(y).Mod(WorldSize);
         return _tileMap[x2, y2];
     }
 }

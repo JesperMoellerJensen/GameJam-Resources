@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class WorldTile : MonoBehaviour {
     private Sprite _sprite;
@@ -9,7 +7,7 @@ public class WorldTile : MonoBehaviour {
 	public TileType TileType;
 
     public bool Occupied;
-    private static float _s = World.WORLD_SIZE;
+    private static float _s = World.WorldSize;
     private readonly int _x = Mathf.RoundToInt(_s / 2);
     private readonly int _y = Mathf.RoundToInt(_s / 2);
     private Transform _playerTransform;

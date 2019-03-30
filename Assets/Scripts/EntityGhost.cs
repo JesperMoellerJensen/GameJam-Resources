@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
@@ -25,7 +23,7 @@ public class EntityGhost : MonoBehaviour
 
 	private void Update()
 	{
-		CheckArea(new TileType[] { TileType.Grass, TileType.MarsDirt });
+		CheckArea(new[] { TileType.Grass, TileType.MarsDirt });
 
 		if (Input.GetKeyDown(KeyCode.E) && _canPlace)
 		{
