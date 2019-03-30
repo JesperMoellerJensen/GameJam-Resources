@@ -31,7 +31,7 @@ public class EntityGhost : MonoBehaviour {
             }
             return;
         }
-        CheckArea(new[] { TileType.Grass });
+        CheckArea(new[] { TileType.MarsDirt });
 
         if (Input.GetButtonDown("Fire1") && _canPlace) {
             PlaceEntity();

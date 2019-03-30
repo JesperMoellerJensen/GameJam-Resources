@@ -153,6 +153,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ItemToSmelt: {fileID: 0}
   ItemsInSmelter: 0
+  RequiredItems: []
   isSmelting: 0
 --- !u!61 &5929628746713968086
 BoxCollider2D:
@@ -161,7 +162,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5929628746713968085}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
