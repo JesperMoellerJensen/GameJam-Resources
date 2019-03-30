@@ -36,14 +36,14 @@ public class MouseInteract : MonoBehaviour {
         InventoryHandler.OnChangedSelectedSlot -= ChangeSelectedItemSlot;
     }
 
-    private void ChangeSelectedItemSlot(ItemSlot itemSlot) {
+    private void ChangeSelectedItemSlot(int index, ItemSlot itemSlot) {
         SelectedItemSlot = itemSlot;
     }
 
     //TODO: Remove
     private void DebugText() {
         if (SelectedItemSlot != null) {
-            GetComponentInChildren<TextMesh>().text = SelectedItemSlot.Item.DisplayName;
+            GetComponentInChildren<TextMesh>().text = $"{SelectedItemSlot.StackSize}x{SelectedItemSlot.Item.DisplayName}";
         } else {
             GetComponentInChildren<TextMesh>().text = "";
         }
