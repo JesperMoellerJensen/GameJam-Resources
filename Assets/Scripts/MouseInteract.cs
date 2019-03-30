@@ -1,27 +1,39 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MouseInteract : MonoBehaviour {
+    private Camera _camera;
+    private EntityGhost _entityGhost;
 
     public Item SelectedItem;
     public int ItemStack;
     public LayerMask LayerMask;
+    public World World;
+
+    private void Start() {
+        _entityGhost = GetComponent<EntityGhost>();
+        _camera = Camera.main;
+    }
 
     private void Update() {
-        transform.position = (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        if (_entityGhost.BuildMode) {
+            return;
+        }
+
+        transform.position = (Vector2) _camera.ScreenToWorldPoint(Input.mousePosition);
         DebugText();
 
-        if (Input.GetButtonDown("Fire2")) {
-            EntityClicked();
+        if (Input.GetButtonDown("Fire1")) {
+            var position = transform.position;
+            var tile = World.GetTileFromWorldPosition(position.x, position.y);
+            Debug.Log("hello0");
+            var didUseItems = tile.Entity.GetComponent<EntityBehavior>().Interact(SelectedItem, ItemStack);
+            if (didUseItems) {
+                SelectedItem = null;
+                ItemStack = 0;
+            }
         }
     }
 
-    private void EntityClicked() {
-        if (SelectedItem != null) {
-           
-        }
-    }
 
     //TODO: Remove
     private void DebugText() {

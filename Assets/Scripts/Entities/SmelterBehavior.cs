@@ -3,26 +3,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SmelterBehavior : MonoBehaviour {
-    public static Func<GameObject, Item, bool> AddItemToSmelter;
-
+public class SmelterBehavior : EntityBehavior {
     public Item ItemToSmelt;
     public int ItemsInSmelter;
+    public List<Item> RequiredItems;
 
-    [SerializeField]
-    private bool isSmelting = false;
+    [SerializeField] private bool isSmelting = false;
     private float currentSmeltingTime = 0;
 
     private Dictionary<ItemID, float> smeltTimeOfItems;
-
 
     // Start is called before the first frame update
     void Start() {
         ItemToSmelt = null;
         ItemsInSmelter = 0;
 
-        smeltTimeOfItems = new Dictionary<ItemID, float>()
-        {
+        smeltTimeOfItems = new Dictionary<ItemID, float>() {
             {ItemID.CopperNugget, 5f},
             {ItemID.IronNugget, 5f},
             {ItemID.GoldNugget, 5f}
@@ -51,28 +47,34 @@ public class SmelterBehavior : MonoBehaviour {
         }
     }
 
-    private void OnEnable() {
-        AddItemToSmelter += OnAddItemToSmelter;
-    }
-
-    private void OnDisable() {
-        AddItemToSmelter -= OnAddItemToSmelter;
-    }
-
-    private bool OnAddItemToSmelter(GameObject smelter, Item itemToSmelt) {
+    private bool OnAddItemToSmelter(Item itemToSmelt) {
+        Debug.Log("hello");
         if (ItemToSmelt != null) {
             return false;
         }
 
-        if (smelter == this.gameObject) {
-            if (VerifyResource(itemToSmelt)) {
-                if (ItemsInSmelter == 0) {
-                    currentSmeltingTime = 0;
-                }
 
-                ItemToSmelt = itemToSmelt;
-                ItemsInSmelter++;
+        if (VerifyResource(itemToSmelt)) {
+            if (ItemsInSmelter == 0) {
+                currentSmeltingTime = 0;
+            }
 
+            ItemToSmelt = itemToSmelt;
+            ItemsInSmelter++;
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public override bool Interact(Item item, int amount) {
+        Debug.Log("hello1");
+        if (RequiredItems.Count == 0) {
+            InteractWithEntity(item, amount);
+        } else {
+            if (RequiredItems.Contains(item)) {
+                RequiredItems.Remove(item);
                 return true;
             }
         }
@@ -80,8 +82,8 @@ public class SmelterBehavior : MonoBehaviour {
         return false;
     }
 
-    private void OnRemoveItemsInSmelter() {
-
+    private void InteractWithEntity(Item item, int amount) {
+        OnAddItemToSmelter(item);
     }
 
 
