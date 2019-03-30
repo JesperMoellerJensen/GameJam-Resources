@@ -9,25 +9,25 @@ public class InventoryHandler : MonoBehaviour
 {
     public static readonly int EquippedInventorySize = 7;
     
-    public static event Action<int> OnChangedSelectedSlot;
-    public static event Action<int, ItemSlot> OnChangedEquippedItem;
+    public static event Action<ItemSlot> OnChangedSelectedSlot;
+    public static event Action<int, ItemSlot> OnChangedItem;
 
     public static Action<Item, int> AddItem;
     public static Action<int, int> RemoveItems;
-    public static Func<int, Item> GetItem;
+    public static Func<Item> GetSelectedItem;
     public static Action<int, int> MoveItem;
     public static Action<int> UseItem;
 
     public int Capacity = 32;
 
-    private Dictionary<int, ItemSlot> Inventoy;
+    private Dictionary<int, ItemSlot> Inventory;
 
     private int _selectedIndex;
     private int SelectedIndex { get { return _selectedIndex; }
         set {
             _selectedIndex = Mathf.Clamp(value, 0, EquippedInventorySize - 1);
 
-            OnChangedSelectedSlot?.Invoke(_selectedIndex);
+            OnChangedSelectedSlot?.Invoke(Inventory[_selectedIndex]);
         }
     }
 
@@ -35,22 +35,13 @@ public class InventoryHandler : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Inventoy = new Dictionary<int, ItemSlot>();
+        Inventory = new Dictionary<int, ItemSlot>();
 
         OnAddItem((Item)Resources.Load("Scriptable Objects/IronNugget"), 1);
         OnAddItem((Item)Resources.Load("Scriptable Objects/IronNugget"), 2);
         OnAddItem((Item)Resources.Load("Scriptable Objects/IronNugget"), 3);
         OnAddItem((Item)Resources.Load("Scriptable Objects/IronNugget"), 4);
         OnAddItem((Item)Resources.Load("Scriptable Objects/IronNugget"), 5);
-        OnAddItem((Item)Resources.Load("Scriptable Objects/IronNugget"), 6);
-        OnAddItem((Item)Resources.Load("Scriptable Objects/IronNugget"), 7);
-        OnAddItem((Item)Resources.Load("Scriptable Objects/IronNugget"), 8);
-        OnAddItem((Item)Resources.Load("Scriptable Objects/IronNugget"), 9);
-        OnAddItem((Item)Resources.Load("Scriptable Objects/IronNugget"), 10);
-        OnAddItem((Item)Resources.Load("Scriptable Objects/IronNugget"), 11);
-        OnAddItem((Item)Resources.Load("Scriptable Objects/IronNugget"), 12);
-        OnAddItem((Item)Resources.Load("Scriptable Objects/IronNugget"), 13);
-        OnAddItem((Item)Resources.Load("Scriptable Objects/IronNugget"), 14);
     }
 
     // Update is called once per frame
@@ -110,7 +101,7 @@ public class InventoryHandler : MonoBehaviour
     private void OnEnable() {
         AddItem += OnAddItem;
         RemoveItems += OnRemoveItems;
-        GetItem += OnGetItem;
+        GetSelectedItem += OnGetSelectedItem;
         MoveItem += OnMoveItem;
         UseItem += OnUseItem;
     }
@@ -118,7 +109,7 @@ public class InventoryHandler : MonoBehaviour
     private void OnDestroy() {
         AddItem -= OnAddItem;
         RemoveItems -= OnRemoveItems;
-        GetItem -= OnGetItem;
+        GetSelectedItem -= OnGetSelectedItem;
         MoveItem -= OnMoveItem;
         UseItem -= OnUseItem;
     }
@@ -126,16 +117,16 @@ public class InventoryHandler : MonoBehaviour
     #region Custom Events
     private void OnAddItem(Item item, int stackSize) {
 
-        if(Inventoy.Count < Capacity) {
+        // If inventory is not full
+        if(Inventory.Count < Capacity) {
 
+            // Find the first available slot, and add the item to it. 
             for (int i = 0; i < Capacity; i++) {
-                if(!Inventoy.ContainsKey(i)) {
+                if(!Inventory.ContainsKey(i)) {
                     ItemSlot itemSlot = new ItemSlot(item, stackSize);
-                    Inventoy.Add(i, itemSlot);
+                    Inventory.Add(i, itemSlot);
 
-                    if(i < EquippedInventorySize) {
-                        OnChangedEquippedItem(i, itemSlot);
-                    }
+                    OnChangedItem(i, itemSlot);
 
                     break;
                 }
@@ -145,16 +136,16 @@ public class InventoryHandler : MonoBehaviour
 
     private void OnRemoveItems(int index, int amount) {
         ItemSlot slot;
-        if (Inventoy.TryGetValue(index, out slot)) {
+        if (Inventory.TryGetValue(index, out slot)) {
             int stack = slot.StackSize - amount;
 
             //TODO: send item to mouse interact
         }
     }
 
-    private Item OnGetItem(int index) {
+    private Item OnGetSelectedItem() {
         ItemSlot slot;
-        if (Inventoy.TryGetValue(index, out slot)) {
+        if (Inventory.TryGetValue(SelectedIndex, out slot)) {
             return slot.Item;
         }
         return null;

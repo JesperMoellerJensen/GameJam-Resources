@@ -15,27 +15,30 @@ public class EquippedItemsUI : MonoBehaviour
     void Start() {
 
         GenerateItemSlots(InventoryHandler.EquippedInventorySize);
-        ChangeSelectedSlot(0);
+        //ChangeSelectedSlot(0);
     }
 
     void OnEnable() {
         InventoryHandler.OnChangedSelectedSlot += ChangeSelectedSlot;
-        InventoryHandler.OnChangedEquippedItem += ChangeEquippedItem;
+        InventoryHandler.OnChangedItem += ChangeEquippedItem;
     }
 
     void OnDestroy() {
         InventoryHandler.OnChangedSelectedSlot -= ChangeSelectedSlot;
-        InventoryHandler.OnChangedEquippedItem -= ChangeEquippedItem;
+        InventoryHandler.OnChangedItem -= ChangeEquippedItem;
     }
 
-    void ChangeSelectedSlot(int index) {
-        SelectedSlot.transform.position = slots[index].transform.position;
+    void ChangeSelectedSlot(ItemSlot itemSlot) {
+        //SelectedSlot.transform.position = slots[index].transform.position;
     }
 
     void ChangeEquippedItem(int index, ItemSlot itemSlot) {
-        GameObject slot = slots[index];
-        slot.GetComponent<SpriteRenderer>().sprite = itemSlot?.Item.Image;
-        slot.GetComponentInChildren<TextMesh>().text = itemSlot.StackSize > 1 ? itemSlot.StackSize + "" : "";
+
+        if (index < InventoryHandler.EquippedInventorySize) {
+            GameObject slot = slots[index];
+            slot.GetComponent<SpriteRenderer>().sprite = itemSlot?.Item.Image;
+            slot.GetComponentInChildren<TextMesh>().text = itemSlot.StackSize > 1 ? itemSlot.StackSize + "" : "";
+        }
 
     }
 

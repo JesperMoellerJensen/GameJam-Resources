@@ -1,11 +1,11 @@
+using System;
 using UnityEngine;
 
 public class MouseInteract : MonoBehaviour {
     private Camera _camera;
     private EntityGhost _entityGhost;
 
-    public Item SelectedItem;
-    public int ItemStack;
+    public ItemSlot SelectedItemSlot;
     public LayerMask LayerMask;
     public World World;
 
@@ -29,11 +29,21 @@ public class MouseInteract : MonoBehaviour {
         }
     }
 
+    private void OnEnable() {
+        InventoryHandler.OnChangedSelectedSlot += ChangeSelectedItemSlot;
+    }
+    private void OnDisable() {
+        InventoryHandler.OnChangedSelectedSlot -= ChangeSelectedItemSlot;
+    }
+
+    private void ChangeSelectedItemSlot(ItemSlot itemSlot) {
+        SelectedItemSlot = itemSlot;
+    }
 
     //TODO: Remove
     private void DebugText() {
-        if (SelectedItem != null) {
-            GetComponentInChildren<TextMesh>().text = SelectedItem.DisplayName;
+        if (SelectedItemSlot != null) {
+            GetComponentInChildren<TextMesh>().text = SelectedItemSlot.Item.DisplayName;
         } else {
             GetComponentInChildren<TextMesh>().text = "";
         }

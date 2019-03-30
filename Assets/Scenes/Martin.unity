@@ -143,7 +143,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8cecffe1e99ff7349a62def85d11a3ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BuildMode: 0
+  BuildMode: 1
 --- !u!4 &29727159
 Transform:
   m_ObjectHideFlags: 0
@@ -171,12 +171,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 203bdf1ddc270f24c9ab1a4085c30669, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SelectedItem: {fileID: 0}
-  ItemStack: 0
   LayerMask:
     serializedVersion: 2
     m_Bits: 256
-  World: {fileID: 0}
+  World: {fileID: 1014726544}
 --- !u!212 &29727161
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -346,6 +344,18 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: Cinemachine.CinemachineBrain+VcamActivatedEvent, Cinemachine, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &1014726544 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3966511888222835263, guid: 3207c93c93494e94b83d6ae2555eb262,
+    type: 3}
+  m_PrefabInstance: {fileID: 3966511888098774736}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa69e5d09778fde4d8025bcaa54a609b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1050097980
 PrefabInstance:
   m_ObjectHideFlags: 0

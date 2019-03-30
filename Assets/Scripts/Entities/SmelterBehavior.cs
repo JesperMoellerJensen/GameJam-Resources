@@ -4,8 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class SmelterBehavior : EntityBehavior {
-    public Item ItemToSmelt;
-    public int ItemsInSmelter;
+    public ItemSlot ItemToSmelt;
     public List<Item> RequiredItems;
 
     [SerializeField] private bool isSmelting = false;
@@ -16,7 +15,6 @@ public class SmelterBehavior : EntityBehavior {
     // Start is called before the first frame update
     void Start() {
         ItemToSmelt = null;
-        ItemsInSmelter = 0;
 
         smeltTimeOfItems = new Dictionary<ItemID, float>() {
             {ItemID.CopperNugget, 5f},
@@ -31,33 +29,34 @@ public class SmelterBehavior : EntityBehavior {
             return;
         }
 
-        if (ItemsInSmelter <= 0) return;
+        if (ItemToSmelt.StackSize <= 0) return;
+
         isSmelting = true;
 
         currentSmeltingTime += Time.deltaTime;
-        if (!(currentSmeltingTime >= smeltTimeOfItems[ItemToSmelt.ID])) return;
+        if (!(currentSmeltingTime >= smeltTimeOfItems[ItemToSmelt.Item.ID])) return;
         SpawnBar();
-        ItemsInSmelter--;
+        ItemToSmelt.StackSize--;
         currentSmeltingTime = 0;
 
-        if (ItemsInSmelter != 0) return;
+        if (ItemToSmelt.StackSize != 0) return;
         isSmelting = false;
         ItemToSmelt = null;
     }
 
     public void SpawnBar() {
         GameObject item = Instantiate(Resources.Load<GameObject>("Prefabs/Item"),transform.position + new Vector3(0,-1,0),transform.rotation);
-        item.GetComponent<ItemPickup>().item = Resources.Load<Item>($"Scriptable Objects/{ItemToSmelt.ResourceType}Bar");
+        item.GetComponent<ItemPickup>().item = Resources.Load<Item>($"Scriptable Objects/{ItemToSmelt.Item.ResourceType}Bar");
 
     }
 
     private void OnAddItemToSmelter(MouseInteract mouseInteract) {
-        if (mouseInteract.SelectedItem == null) {
-            RemoveFromSmelter(mouseInteract, ItemToSmelt, ItemsInSmelter);
+        if (mouseInteract.SelectedItemSlot == null) {
+            RemoveFromSmelter(mouseInteract, ItemToSmelt);
             return;
         }
 
-        if (CanBeSmelted(mouseInteract.SelectedItem) == false) {
+        if (CanBeSmelted(mouseInteract.SelectedItemSlot.Item) == false) {
             return;
         }
 
@@ -66,7 +65,7 @@ public class SmelterBehavior : EntityBehavior {
             return;
         }
 
-        if (ItemToSmelt.ID == mouseInteract.SelectedItem.ID) {
+        if (ItemToSmelt.Item.ID == mouseInteract.SelectedItemSlot.Item.ID) {
             AddSameToSmelter(mouseInteract);
             return;
         }
@@ -80,29 +79,23 @@ public class SmelterBehavior : EntityBehavior {
 
     private void Replace(MouseInteract mouseInteract) {
         var t = ItemToSmelt;
-        var t2 = ItemsInSmelter;
         AddToSmelter(mouseInteract);
-        RemoveFromSmelter(mouseInteract, t, t2);
+        RemoveFromSmelter(mouseInteract, t);
     }
 
     private void AddSameToSmelter(MouseInteract mouseInteract) {
-        ItemsInSmelter += mouseInteract.ItemStack;
-        mouseInteract.ItemStack = 0;
-        mouseInteract.SelectedItem = null;
+        ItemToSmelt.StackSize += mouseInteract.SelectedItemSlot.StackSize;
+        mouseInteract.SelectedItemSlot = null;
     }
 
     private void AddToSmelter(MouseInteract mouseInteract) {
-        ItemToSmelt = mouseInteract.SelectedItem;
-        ItemsInSmelter = mouseInteract.ItemStack;
-        mouseInteract.SelectedItem = null;
-        mouseInteract.ItemStack = 0;
+        ItemToSmelt = mouseInteract.SelectedItemSlot;
+        mouseInteract.SelectedItemSlot = null;
     }
 
-    private void RemoveFromSmelter(MouseInteract mouseInteract, Item itemToSmelt, int itemsInSmelter) {
-        mouseInteract.SelectedItem = itemToSmelt;
-        mouseInteract.ItemStack = itemsInSmelter;
+    private void RemoveFromSmelter(MouseInteract mouseInteract, ItemSlot itemToSmelt) {
+        mouseInteract.SelectedItemSlot = itemToSmelt;
         ItemToSmelt = null;
-        ItemsInSmelter = 0;
     }
 
     public override void Interact(MouseInteract mouseInteract) {
@@ -110,8 +103,8 @@ public class SmelterBehavior : EntityBehavior {
         if (RequiredItems.Count == 0) {
             OnAddItemToSmelter(mouseInteract);
         } else {
-            if (RequiredItems.Contains(mouseInteract.SelectedItem)) {
-                RequiredItems.Remove(mouseInteract.SelectedItem);
+            if (RequiredItems.Contains(mouseInteract.SelectedItemSlot.Item)) {
+                RequiredItems.Remove(mouseInteract.SelectedItemSlot.Item);
             }
         }
     }
