@@ -36,13 +36,19 @@ public class SmelterBehavior : EntityBehavior {
 
         currentSmeltingTime += Time.deltaTime;
         if (!(currentSmeltingTime >= smeltTimeOfItems[ItemToSmelt.ID])) return;
-        Debug.Log("smelted");
+        SpawnBar();
         ItemsInSmelter--;
         currentSmeltingTime = 0;
 
         if (ItemsInSmelter != 0) return;
         isSmelting = false;
         ItemToSmelt = null;
+    }
+
+    public void SpawnBar() {
+        GameObject item = Instantiate(Resources.Load<GameObject>("Prefabs/Item"),transform.position + new Vector3(0,-1,0),transform.rotation);
+        item.GetComponent<ItemPickup>().item = Resources.Load<Item>($"Scriptable Objects/{ItemToSmelt.ResourceType}Bar");
+
     }
 
     private void OnAddItemToSmelter(MouseInteract mouseInteract) {
