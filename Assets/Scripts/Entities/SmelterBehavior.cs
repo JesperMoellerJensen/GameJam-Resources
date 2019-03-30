@@ -59,7 +59,7 @@ public class SmelterBehavior : MonoBehaviour {
         AddItemToSmelter -= OnAddItemToSmelter;
     }
 
-    public bool OnAddItemToSmelter(GameObject smelter, Item itemToSmelt) {
+    private bool OnAddItemToSmelter(GameObject smelter, Item itemToSmelt) {
         if (ItemToSmelt != null) {
             return false;
         }
