@@ -9,6 +9,7 @@ public class Player : MonoBehaviour {
     public float NoOxygenDamage;
 
     private PlayerOxygenTank _oxygenTank;
+    private SpriteRenderer _spriteRenderer;
     private float _currentHealth;
 
 
@@ -17,6 +18,7 @@ public class Player : MonoBehaviour {
     }
     private void Start() {
         _oxygenTank = GetComponent<PlayerOxygenTank>();
+        _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
 
         InvokeRepeating(nameof(UseOxygen), 0, OxygenTickSpeed);
     }
@@ -24,7 +26,7 @@ public class Player : MonoBehaviour {
     public void TakeDamage(float amount) {
         _currentHealth -= amount;
         Debug.Log($"I took {amount} damage, i now have {_currentHealth} health left");
-        if(_currentHealth <= 0) {
+        if (_currentHealth <= 0) {
             Death();
         }
     }
@@ -41,7 +43,4 @@ public class Player : MonoBehaviour {
     private void Death() {
         Debug.Log("I Am Dead");
     }
-
-    
-
 }

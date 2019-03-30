@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 public class World : MonoBehaviour {
     private WorldTile[,] _tileMap;
@@ -18,6 +18,7 @@ public class World : MonoBehaviour {
                 var transform1 = transform;
                 _tileMap[x, y] = Instantiate(TilePrefab, new Vector2(x, y), transform1.rotation, transform1)
                     .GetComponent<WorldTile>();
+                _tileMap[x, y].GetComponent<SpriteRenderer>().sortingOrder = -10;
             }
         }
     }
