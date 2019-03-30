@@ -15,12 +15,11 @@ public enum EntityID {
     CopperOre
 }
 
-[CreateAssetMenu(fileName = "Entity", menuName = "ScriptableObjects/Entity", order = 1)]
+[CreateAssetMenu(fileName = "Entity", menuName = "Scriptable Objects/Entity", order = 1)]
 public class Entity : ScriptableObject {
     public EntityType Type;
     public EntityID ID;
     public string DisplayName;
     public string Description;
-
-    
+    public MonoBehaviour Behaviour;
 }
