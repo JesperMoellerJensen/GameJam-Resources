@@ -1,29 +1,53 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
-[RequireComponent(typeof(SpriteRenderer))]
 public class EntityBehavior : MonoBehaviour {
-    private Transform _player;
-    private SpriteRenderer _spriteRenderer;
+
+    public MonoBehaviour Script;
+    public List<Item> RequiredItems;
 
     private void Start() {
-        _player = GameObject.FindGameObjectWithTag("Player").transform;
-        _spriteRenderer = GetComponent<SpriteRenderer>();
+        Script.enabled = false;
+        GetComponent<BoxCollider2D>().enabled = false;
+        GetComponent<SpriteRenderer>().color = new Color(0.3f, 0.8f, 1, 0.6f);
     }
 
-    private void Update() {
-        SetSortingOrder();
+
+    private void OnEnable() {
+        EventManager.AddListener("AddItemToEntity", OnInteract);
     }
 
-    private void SetSortingOrder() {
+    public object OnInteract(object eventArgs) {
+        object[] data = (object[])eventArgs;
+        GameObject entity = (GameObject)data[0];
 
-        int offset = Mathf.FloorToInt(transform.position.y + 0.5f - _player.position.y);
+        if (entity == transform.root.gameObject) {
+            Item item = (Item)data[1];
+            int amount = (int)data[2];
 
-        if (offset > 0) {
-            _spriteRenderer.sortingOrder = -1;
+            Interact(item, amount)
+        } 
+    }
+
+    public bool Interact(Item item, int amount) {
+        if (RequiredItems.Count == 0) {
+            InteractWithEntity(item, amount);
         } else {
-            _spriteRenderer.sortingOrder = 1;
+            if (RequiredItems.Contains(item)) {
+                RequiredItems.Remove(item);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void InteractWithEntity(Item item, int amount) {
+        if(Script.GetType() == typeof(SmelterBehavior)) {
+            SmelterBehavior smelter = (SmelterBehavior)Script;
         }
     }
 }
+
+

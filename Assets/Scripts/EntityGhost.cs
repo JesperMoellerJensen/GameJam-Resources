@@ -6,7 +6,7 @@ public class EntityGhost : MonoBehaviour {
     private int _sizeX;
     private int _sizeY;
 
-    private GameObject[] _ghosts;
+    private UnityEngine.GameObject[] _ghosts;
     private WorldTile[] _tiles;
     private Camera _camera;
 
@@ -33,12 +33,12 @@ public class EntityGhost : MonoBehaviour {
 
         var size = _sizeX * _sizeY;
 
-        _ghosts = new GameObject[size];
+        _ghosts = new UnityEngine.GameObject[size];
         _tiles = new WorldTile[size];
 
 
         for (var i = 0; i < size; i++) {
-            var o = new GameObject();
+            var o = new UnityEngine.GameObject();
             o.transform.parent = transform;
             o.AddComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/DefaultTile");
             o.GetComponent<SpriteRenderer>().sortingOrder = 1;
@@ -55,7 +55,7 @@ public class EntityGhost : MonoBehaviour {
         for (var y = 0; y < _sizeY; y++) {
             for (var x = 0; x < _sizeX; x++) {
                 var tile = _world.GetTileFromWorldPosition(clamp.x + x, clamp.y + y);
-                _ghosts[i].transform.position = new Vector2((int)clamp.x + x, (int)clamp.y + y);
+                _ghosts[i].transform.position = new Vector3((int)clamp.x + x, (int)clamp.y + y,0);
 
                 if (tile.Occupied == false && allowedTileTypes.Contains(tile.TileType)) {
                     _ghosts[i].GetComponent<SpriteRenderer>().color = new Color(0, 1, 0, 0.5f);
@@ -75,7 +75,7 @@ public class EntityGhost : MonoBehaviour {
 
             //TODO: Place actual entity
         }
-        GameObject e = (GameObject)Instantiate(Resources.Load("Prefabs/Smelter"));
+        UnityEngine.GameObject e = (UnityEngine.GameObject)Instantiate(Resources.Load("Prefabs/Smelter"));
         e.transform.position = _tiles[0].transform.position + new Vector3(0.5f,0.5f);
     }
 }
