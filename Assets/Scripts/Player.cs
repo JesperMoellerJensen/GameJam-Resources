@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,7 +11,7 @@ public class Player : MonoBehaviour
 
 	private void Start()
 	{
-		InvokeRepeating
+		InvokeRepeating(UseOxygen)
 	}
 
 	private void UseOxygen()
