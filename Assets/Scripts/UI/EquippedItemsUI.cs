@@ -15,31 +15,34 @@ public class EquippedItemsUI : MonoBehaviour
     void Start() {
 
         GenerateItemSlots(InventoryHandler.EquippedInventorySize);
-        //ChangeSelectedSlot(0);
     }
 
     void OnEnable() {
         InventoryHandler.OnChangedSelectedSlot += ChangeSelectedSlot;
-        InventoryHandler.OnChangedItem += ChangeEquippedItem;
+        InventoryHandler.UpdatedInventory += UpdateInventory;
     }
 
     void OnDestroy() {
         InventoryHandler.OnChangedSelectedSlot -= ChangeSelectedSlot;
-        InventoryHandler.OnChangedItem -= ChangeEquippedItem;
+        InventoryHandler.UpdatedInventory -= UpdateInventory;
     }
 
-    void ChangeSelectedSlot(ItemSlot itemSlot) {
-        //SelectedSlot.transform.position = slots[index].transform.position;
-    }
-
-    void ChangeEquippedItem(int index, ItemSlot itemSlot) {
-
+    void ChangeSelectedSlot(int index, ItemSlot itemSlot) {
         if (index < InventoryHandler.EquippedInventorySize) {
-            GameObject slot = slots[index];
-            slot.GetComponent<SpriteRenderer>().sprite = itemSlot?.Item.Image;
-            slot.GetComponentInChildren<TextMesh>().text = itemSlot.StackSize > 1 ? itemSlot.StackSize + "" : "";
+            SelectedSlot.transform.position = slots[index].transform.position;
         }
+        else {
+            SelectedSlot.transform.Translate(new Vector3(0, 0, -100));
+        }
+    }
 
+    void UpdateInventory(List<ItemSlot> inventory) {
+
+        for (int i = 0; i < InventoryHandler.EquippedInventorySize; i++) {
+            GameObject slot = slots[i];
+            slot.GetComponent<SpriteRenderer>().sprite = inventory[i].Item.Image;
+            slot.GetComponentInChildren<TextMesh>().text = inventory[i].StackSize > 1 ? inventory[i].StackSize + "" : "";
+        }
     }
 
     void GenerateItemSlots(int inventorySize) {
