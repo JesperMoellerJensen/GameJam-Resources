@@ -170,11 +170,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 203bdf1ddc270f24c9ab1a4085c30669, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SelectedItem: {fileID: 0}
+  SelectedItem: {fileID: 11400000, guid: 7223b9c6cd556c5408fb4e90c313c697, type: 2}
+  ItemStack: 0
   LayerMask:
     serializedVersion: 2
     m_Bits: 256
-  EntityHovered: {fileID: 0}
 --- !u!212 &29727161
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -410,17 +410,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4705338178375974192, guid: b041f2aedf07d7b4880a52f365082129,
-        type: 3}
-      propertyPath: RequiredItems.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4705338178375974192, guid: b041f2aedf07d7b4880a52f365082129,
-        type: 3}
-      propertyPath: RequiredItems.Array.data[0]
-      value: 
-      objectReference: {fileID: 11400000, guid: 7223b9c6cd556c5408fb4e90c313c697,
-        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b041f2aedf07d7b4880a52f365082129, type: 3}
 --- !u!1 &1087807696
@@ -809,6 +798,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5793735869666157493, guid: b64cd868529d04444a60e0615021b344,
+        type: 3}
+      propertyPath: Speed
+      value: 800
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b64cd868529d04444a60e0615021b344, type: 3}
