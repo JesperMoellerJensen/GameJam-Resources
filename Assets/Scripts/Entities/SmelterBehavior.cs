@@ -23,9 +23,9 @@ public class SmelterBehavior : MonoBehaviour {
 
         smeltTimeOfItems = new Dictionary<ItemID, float>()
         {
-            {ItemID.CopperOre, 5f},
-            {ItemID.IronOre, 5f},
-            {ItemID.GoldOre, 5f}
+            {ItemID.CopperNugget, 5f},
+            {ItemID.IronNugget, 5f},
+            {ItemID.GoldNugget, 5f}
         };
     }
 
