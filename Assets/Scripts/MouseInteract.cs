@@ -36,6 +36,18 @@ public class MouseInteract : MonoBehaviour {
                 SelectedItemSlot = tile.Entity.GetComponent<EntityBehavior>().Interact(SelectedItemSlot);
             }
         }
+
+        if (Input.GetMouseButtonDown(2)) {
+            var position = transform.position;
+            var tile = World.GetTileFromWorldPosition(position.x, position.y);
+            if (tile.Entity != null) {
+
+                int halfOfStack = SelectedItemSlot.StackSize / 2;
+                ItemSlot temp = SelectedItemSlot;
+                SelectedItemSlot = tile.Entity.GetComponent<EntityBehavior>().Interact(new ItemSlot(SelectedItemSlot.Item, halfOfStack));
+                SelectedItemSlot.StackSize += temp.StackSize;
+            }
+        }
     }
 
     private void OnEnable() {
