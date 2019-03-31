@@ -5,10 +5,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class InventoryHandler : MonoBehaviour
-{
+public class InventoryHandler : MonoBehaviour {
     public static readonly int EquippedInventorySize = 7;
-    
+
     public static event Action<int, ItemSlot> OnChangedSelectedSlot;
     public static event Action<List<ItemSlot>> UpdatedInventory;
 
@@ -22,7 +21,8 @@ public class InventoryHandler : MonoBehaviour
     private ItemSlot[] Inventory;
 
     private int _selectedIndex;
-    private int SelectedIndex { get { return _selectedIndex; }
+    private int SelectedIndex {
+        get { return _selectedIndex; }
         set {
             _selectedIndex = Mathf.Clamp(value, 0, EquippedInventorySize - 1);
 
@@ -32,8 +32,7 @@ public class InventoryHandler : MonoBehaviour
 
 
     // Start is called before the first frame update
-    void Start()
-    {
+    void Start() {
         Inventory = new ItemSlot[Capacity];
 
         OnAddItem((Item)Resources.Load("Scriptable Objects/IronNugget"), 1);
@@ -46,8 +45,7 @@ public class InventoryHandler : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
-    {
+    void Update() {
 
         if (Input.GetKeyDown(KeyCode.Alpha1)) {
             SelectedIndex = 0;
@@ -89,8 +87,7 @@ public class InventoryHandler : MonoBehaviour
             SelectedIndex = 9;
         }
 
-        if (Input.mouseScrollDelta.y < 0f) 
-        {
+        if (Input.mouseScrollDelta.y < 0f) {
             SelectedIndex--;
         }
 
@@ -118,21 +115,23 @@ public class InventoryHandler : MonoBehaviour
 
         // Find the first available slot, and add the item to it. 
         for (int i = 0; i < Capacity; i++) {
-            if(Inventory[i] == null) {
+            if (Inventory[i] == null) {
                 ItemSlot itemSlot = new ItemSlot(item, stackSize);
                 Inventory[i] = itemSlot;
 
-                UpdatedInventory(Inventory.ToList());
-
+                break;
+            } else if (Inventory[i].Item.ID == item.ID) {
+                Inventory[i].StackSize += stackSize;
                 break;
             }
         }
+        UpdatedInventory(Inventory.ToList());
     }
 
     private void OnRemoveItems(int index, int amount) {
         ItemSlot slot = Inventory[index];
 
-        if(slot != null) {
+        if (slot != null) {
             slot.StackSize -= amount;
 
             if (amount <= 0 || slot.StackSize <= 0) {

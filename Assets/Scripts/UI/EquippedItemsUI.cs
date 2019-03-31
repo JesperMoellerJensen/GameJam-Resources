@@ -12,7 +12,7 @@ public class EquippedItemsUI : MonoBehaviour
 
     private List<GameObject> slots;
 
-    void Start() {
+    void Awake() {
 
         GenerateItemSlots(InventoryHandler.EquippedInventorySize);
     }
@@ -40,6 +40,7 @@ public class EquippedItemsUI : MonoBehaviour
 
         for (int i = 0; i < InventoryHandler.EquippedInventorySize; i++) {
             GameObject slot = slots[i];
+
 
             if(inventory[i] != null) {
                 slot.GetComponent<SpriteRenderer>().sprite = inventory[i].Item.Image;

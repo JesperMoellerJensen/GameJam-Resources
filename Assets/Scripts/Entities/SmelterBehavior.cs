@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class SmelterBehavior : EntityBehavior {
     public ItemSlot ItemToSmelt;
@@ -48,6 +49,7 @@ public class SmelterBehavior : EntityBehavior {
     public void SpawnBar() {
         GameObject item = Instantiate(Resources.Load<GameObject>("Prefabs/Item"),transform.position + new Vector3(0,-1,0),transform.rotation);
         item.GetComponent<ItemPickup>().item = Resources.Load<Item>($"Scriptable Objects/{ItemToSmelt.Item.ResourceType}Bar");
+        item.GetComponent<Rigidbody2D>().velocity = new Vector2(Random.Range(-5,5),Random.Range(-2f,-6f));
 
     }
 
@@ -100,7 +102,7 @@ public class SmelterBehavior : EntityBehavior {
     }
 
     public override void Interact(MouseInteract mouseInteract) {
-        Debug.Log("hello " + mouseInteract.SelectedItemSlot.Item + " " + mouseInteract.SelectedItemSlot.StackSize);
+        Debug.Log(mouseInteract.SelectedItemSlot.Item.DisplayName + " " + mouseInteract.SelectedItemSlot.StackSize + " In smelter");
         if (RequiredItems.Count == 0) {
             OnAddItemToSmelter(mouseInteract);
         } else {
