@@ -13,10 +13,8 @@ public class InventoryHandler : MonoBehaviour
     public static event Action<ItemSlot[]> UpdatedInventory;
 
     public static Action<ItemSlot> UpdateSelectedSlot;
+    public static Func<ItemSlot> GetSelectedSlot;
     public static Action<Item, int> AddItem;
-    public static Action<int, int> RemoveItems;
-    public static Action<int, int> MoveItem;
-    public static Action<int> UseItem;
 
     public static readonly int Capacity = 32;
 
@@ -31,7 +29,17 @@ public class InventoryHandler : MonoBehaviour
             OnChangedSelectedSlot?.Invoke(_selectedIndex, Inventory[_selectedIndex]);
         }
     }
+    private void OnEnable() {
+        UpdateSelectedSlot += SetSelectedSlot;
+        GetSelectedSlot += OnGetSelectedSlot;
+        AddItem += OnAddItem;
+    }
 
+    private void OnDestroy() {
+        UpdateSelectedSlot -= SetSelectedSlot;
+        GetSelectedSlot -= OnGetSelectedSlot;
+        AddItem -= OnAddItem;
+    }
 
     // Start is called before the first frame update
     void Start() {
@@ -101,22 +109,6 @@ public class InventoryHandler : MonoBehaviour
         }
     }
 
-    private void OnEnable() {
-        AddItem += OnAddItem;
-        RemoveItems += OnRemoveItems;
-        MoveItem += OnMoveItem;
-        UseItem += OnUseItem;
-        UpdateSelectedSlot += SetSelectedSlot;
-    }
-
-    private void OnDestroy() {
-        AddItem -= OnAddItem;
-        RemoveItems -= OnRemoveItems;
-        MoveItem -= OnMoveItem;
-        UseItem -= OnUseItem;
-        UpdateSelectedSlot -= SetSelectedSlot;
-    }
-
     #region Custom Events
     private void SetSelectedSlot(ItemSlot itemSlot) {
 
@@ -140,29 +132,10 @@ public class InventoryHandler : MonoBehaviour
         UpdatedInventory?.Invoke(Inventory);
     }
 
-    private void OnRemoveItems(int index, int amount) {
-        ItemSlot slot = Inventory[index];
-
-        if(slot != null) {
-            slot.StackSize -= amount;
-
-            if (amount <= 0 || slot.StackSize <= 0) {
-                Inventory[index] = null;
-            }
-        }
-
-        UpdatedInventory?.Invoke(Inventory);
+    private ItemSlot OnGetSelectedSlot() {
+        return Inventory[_selectedIndex];
     }
 
-    private void OnMoveItem(int indexFrom, int indexTo) {
-        UpdatedInventory?.Invoke(Inventory);
-
-    }
-
-    private void OnUseItem(int indexFrom) {
-        UpdatedInventory?.Invoke(Inventory);
-
-    }
 
     #endregion
 

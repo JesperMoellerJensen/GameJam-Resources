@@ -75,6 +75,7 @@ public class SmelterBehavior : EntityBehavior {
 
             // If mouse item is null, then take content of smelter
             if (selectedItem == null) {
+                currentSmeltingTime = 0;
                 var temp = ItemSlot;
                 ItemSlot = null;
                 return temp;
@@ -94,6 +95,7 @@ public class SmelterBehavior : EntityBehavior {
                 }
 
                 // Switch items
+                currentSmeltingTime = 0;
                 var temp = ItemSlot;
                 ItemSlot = selectedItem;
                 return temp;
