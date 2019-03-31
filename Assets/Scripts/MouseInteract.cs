@@ -5,12 +5,10 @@ public class MouseInteract : MonoBehaviour {
     private Camera _camera;
     private EntityGhost _entityGhost;
 
-    private ItemSlot _itemSlot;
     public ItemSlot SelectedItemSlot {
-        get { return _itemSlot; }
+        get { return InventoryHandler.GetSelectedSlot?.Invoke(); }
         set {
-            _itemSlot = value;
-            InventoryHandler.UpdateSelectedSlot?.Invoke(_itemSlot);
+            InventoryHandler.UpdateSelectedSlot?.Invoke(value);
         }
     }
     public LayerMask LayerMask;
@@ -37,15 +35,12 @@ public class MouseInteract : MonoBehaviour {
             }
         }
 
-        if (Input.GetMouseButtonDown(2)) {
+        if (Input.GetButtonDown("Fire2")) {
             var position = transform.position;
             var tile = World.GetTileFromWorldPosition(position.x, position.y);
             if (tile.Entity != null) {
-
-                int halfOfStack = SelectedItemSlot.StackSize / 2;
-                ItemSlot temp = SelectedItemSlot;
-                SelectedItemSlot = tile.Entity.GetComponent<EntityBehavior>().Interact(new ItemSlot(SelectedItemSlot.Item, halfOfStack));
-                SelectedItemSlot.StackSize += temp.StackSize;
+               
+                // TODO: Interact with only 5
             }
         }
     }
