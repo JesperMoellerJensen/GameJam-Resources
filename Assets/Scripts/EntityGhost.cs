@@ -48,6 +48,18 @@ public class EntityGhost : MonoBehaviour {
             _entityType = Resources.Load<GameObject>("Prefabs/OxygenBank");
             _entityOffset = new Vector3(1f, 0.5f);
         }
+        if (Input.GetKeyDown(KeyCode.Alpha3)) {
+            CleanUpGhosts();
+            SetGhostSize(1, 1);
+            _entityType = Resources.Load<GameObject>("Prefabs/IronOre");
+            _entityOffset = new Vector3(0,0);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha4)) {
+            CleanUpGhosts();
+            SetGhostSize(1, 1);
+            _entityType = Resources.Load<GameObject>("Prefabs/CarbonOre");
+            _entityOffset = new Vector3(0, 0);
+        }
 
         if (_ghosts == null) {
             InitGhostTiles();

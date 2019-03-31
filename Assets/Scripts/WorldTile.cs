@@ -35,7 +35,7 @@ public class WorldTile : MonoBehaviour {
         //Sprite = Resources.Load<Sprite>("Sprites/DebugMarsDirt");
         DebugSetRandomTileType();
         _playerTransform = GameObject.FindWithTag("Player").transform;
-        InvokeRepeating("UpdatePosition", 0,2);
+        InvokeRepeating("UpdatePosition", 0, 2);
     }
 
     float Dist(float a, float b) {
@@ -64,11 +64,21 @@ public class WorldTile : MonoBehaviour {
     private void DebugSetRandomTileType() {
 
         if (Random.Range(0, 100) < 110) {
-            Sprite = Resources.Load<Sprite>("Sprites/Tiles/MarsGround_" + Random.Range(0,8));
+            Sprite = Resources.Load<Sprite>("Sprites/Tiles/MarsGround_" + Random.Range(0, 8));
             TileType = TileType.MarsDirt;
         } else {
             Sprite = Resources.Load<Sprite>("Sprites/DebugGrass");
             TileType = TileType.Grass;
+        }
+
+        if (Random.Range(0, 100) < 5) {
+            var e = Instantiate(Resources.Load<GameObject>("Prefabs/CarbonOre"));
+            e.transform.position = transform.position;
+            Entity = e;
+        } else if (Random.Range(0, 100) < 5) {
+            var e = Instantiate(Resources.Load<GameObject>("Prefabs/IronOre"));
+            e.transform.position = transform.position;
+            Entity = e;
         }
     }
 }

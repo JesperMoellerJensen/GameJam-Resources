@@ -9,8 +9,7 @@ public class OxygenBankBehavior : EntityBehavior {
     public float MaxCapacity = 500f;
     public float CurrentCapacity;
 
-
-
+    private TextMesh _textMesh;
     private float _barPosYTop = 0.14f;
     private float _barPosYBot = -0.4528f;
 
@@ -19,10 +18,12 @@ public class OxygenBankBehavior : EntityBehavior {
 
     private void Start() {
         CurrentCapacity = MaxCapacity;
+        _textMesh = GetComponentInChildren<TextMesh>();
     }
 
     private void Update() {
         UpdateOxygenBar();
+        UpdateText();
     }
     public override ItemSlot Interact(ItemSlot selectedItemSlot) {
 
@@ -71,6 +72,10 @@ public class OxygenBankBehavior : EntityBehavior {
 
         OxygenBar.localPosition = new Vector3(0.5f, pos, 0);
         OxygenBar.localScale = new Vector3(1, scale, 1);
+    }
+
+    private void UpdateText() {
+        _textMesh.text = $"{CurrentCapacity} / {MaxCapacity}";
     }
 
 
