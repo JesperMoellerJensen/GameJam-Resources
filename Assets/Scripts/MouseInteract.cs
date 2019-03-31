@@ -5,7 +5,14 @@ public class MouseInteract : MonoBehaviour {
     private Camera _camera;
     private EntityGhost _entityGhost;
 
-    public ItemSlot SelectedItemSlot;
+    private ItemSlot _itemSlot;
+    public ItemSlot SelectedItemSlot {
+        get { return _itemSlot; }
+        set {
+            _itemSlot = value;
+            InventoryHandler.UpdateSelectedSlot?.Invoke(_itemSlot);
+        }
+    }
     public LayerMask LayerMask;
     public World World;
 
@@ -25,7 +32,9 @@ public class MouseInteract : MonoBehaviour {
         if (Input.GetButtonDown("Fire1")) {
             var position = transform.position;
             var tile = World.GetTileFromWorldPosition(position.x, position.y);
-            if (tile.Entity != null) tile.Entity.GetComponent<EntityBehavior>().Interact(this);
+            if (tile.Entity != null) {
+                SelectedItemSlot = tile.Entity.GetComponent<EntityBehavior>().Interact(SelectedItemSlot);
+            }
         }
     }
 

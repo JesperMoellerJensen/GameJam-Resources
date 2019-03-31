@@ -36,7 +36,7 @@ public class EquippedItemsUI : MonoBehaviour
         }
     }
 
-    void UpdateInventory(List<ItemSlot> inventory) {
+    void UpdateInventory(ItemSlot[] inventory) {
 
         for (int i = 0; i < InventoryHandler.EquippedInventorySize; i++) {
             GameObject slot = slots[i];

@@ -10,8 +10,9 @@ public class InventoryHandler : MonoBehaviour
     public static readonly int EquippedInventorySize = 7;
     
     public static event Action<int, ItemSlot> OnChangedSelectedSlot;
-    public static event Action<List<ItemSlot>> UpdatedInventory;
+    public static event Action<ItemSlot[]> UpdatedInventory;
 
+    public static Action<ItemSlot> UpdateSelectedSlot;
     public static Action<Item, int> AddItem;
     public static Action<int, int> RemoveItems;
     public static Action<int, int> MoveItem;
@@ -48,6 +49,8 @@ public class InventoryHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        UpdatedInventory?.Invoke(Inventory);
+
 
         if (Input.GetKeyDown(KeyCode.Alpha1)) {
             SelectedIndex = 0;
@@ -104,6 +107,7 @@ public class InventoryHandler : MonoBehaviour
         RemoveItems += OnRemoveItems;
         MoveItem += OnMoveItem;
         UseItem += OnUseItem;
+        UpdateSelectedSlot += SetSelectedSlot;
     }
 
     private void OnDestroy() {
@@ -111,22 +115,30 @@ public class InventoryHandler : MonoBehaviour
         RemoveItems -= OnRemoveItems;
         MoveItem -= OnMoveItem;
         UseItem -= OnUseItem;
+        UpdateSelectedSlot -= SetSelectedSlot;
     }
 
     #region Custom Events
+    private void SetSelectedSlot(ItemSlot itemSlot) {
+
+        Inventory[_selectedIndex] = itemSlot;
+    }
+
     private void OnAddItem(Item item, int stackSize) {
 
         // Find the first available slot, and add the item to it. 
         for (int i = 0; i < Capacity; i++) {
             if(Inventory[i] == null) {
-                ItemSlot itemSlot = new ItemSlot(item, stackSize);
-                Inventory[i] = itemSlot;
-
-                UpdatedInventory(Inventory.ToList());
-
+                Inventory[i] = new ItemSlot(item, stackSize);
+                break;
+            }
+            else if(Inventory[i].Item.ID == item.ID) {
+                Inventory[i].StackSize += stackSize;
                 break;
             }
         }
+
+        UpdatedInventory?.Invoke(Inventory);
     }
 
     private void OnRemoveItems(int index, int amount) {
@@ -140,16 +152,16 @@ public class InventoryHandler : MonoBehaviour
             }
         }
 
-        UpdatedInventory(Inventory.ToList());
+        UpdatedInventory?.Invoke(Inventory);
     }
 
     private void OnMoveItem(int indexFrom, int indexTo) {
-        UpdatedInventory(Inventory.ToList());
+        UpdatedInventory?.Invoke(Inventory);
 
     }
 
     private void OnUseItem(int indexFrom) {
-        UpdatedInventory(Inventory.ToList());
+        UpdatedInventory?.Invoke(Inventory);
 
     }
 
@@ -159,6 +171,6 @@ public class InventoryHandler : MonoBehaviour
     private void DropItemInWorld(Item item) {
         GameObject o = (GameObject)Instantiate(Resources.Load($"Prefabs/Items/{item.ID}"));
         o.transform.position = GameObject.FindGameObjectWithTag("Player").transform.position;
-        UpdatedInventory(Inventory.ToList());
+        UpdatedInventory?.Invoke(Inventory);
     }
 }

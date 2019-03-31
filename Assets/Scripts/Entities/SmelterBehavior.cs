@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class SmelterBehavior : EntityBehavior {
-    public ItemSlot ItemToSmelt;
+    public ItemSlot ItemSlot;
     public List<Item> RequiredItems;
 
     [SerializeField] private bool isSmelting = false;
@@ -14,7 +14,7 @@ public class SmelterBehavior : EntityBehavior {
 
     // Start is called before the first frame update
     void Start() {
-        ItemToSmelt = null;
+        ItemSlot = null;
 
         smeltTimeOfItems = new Dictionary<ItemID, float>() {
             {ItemID.CopperNugget, 5f},
@@ -25,88 +25,82 @@ public class SmelterBehavior : EntityBehavior {
 
     // Update is called once per frame
     void Update() {
-        if (ItemToSmelt == null) {
+        if (ItemSlot == null) {
             return;
         }
-
-        if (ItemToSmelt.StackSize <= 0) return;
 
         isSmelting = true;
 
         currentSmeltingTime += Time.deltaTime;
-        if (!(currentSmeltingTime >= smeltTimeOfItems[ItemToSmelt.Item.ID])) return;
-        Debug.Log($"{ItemToSmelt.StackSize}");
-        SpawnBar();
-        ItemToSmelt.StackSize--;
-        currentSmeltingTime = 0;
+        if (currentSmeltingTime >= smeltTimeOfItems[ItemSlot.Item.ID]) 
+        {
+            Debug.Log($"{ItemSlot.StackSize}");
+            SpawnBar();
+            ItemSlot.StackSize--;
+            currentSmeltingTime = 0;
 
-        if (ItemToSmelt.StackSize != 0) return;
-        isSmelting = false;
-        ItemToSmelt = null;
+            if (ItemSlot.StackSize == 0) {
+                isSmelting = false;
+                ItemSlot = null;
+            }
+        }
     }
 
     public void SpawnBar() {
         GameObject item = Instantiate(Resources.Load<GameObject>("Prefabs/Item"),transform.position + new Vector3(0,-1,0),transform.rotation);
-        item.GetComponent<ItemPickup>().item = Resources.Load<Item>($"Scriptable Objects/{ItemToSmelt.Item.ResourceType}Bar");
+        item.GetComponent<ItemPickup>().item = Resources.Load<Item>($"Scriptable Objects/{ItemSlot.Item.ResourceType}Bar");
 
-    }
-
-    private void OnAddItemToSmelter(MouseInteract mouseInteract) {
-        if (mouseInteract.SelectedItemSlot == null) {
-            RemoveFromSmelter(mouseInteract, ItemToSmelt);
-            return;
-        }
-
-        if (CanBeSmelted(mouseInteract.SelectedItemSlot.Item) == false) {
-            return;
-        }
-
-        if (ItemToSmelt == null) {
-            AddToSmelter(mouseInteract);
-            return;
-        }
-
-        if (ItemToSmelt.Item.ID == mouseInteract.SelectedItemSlot.Item.ID) {
-            AddSameToSmelter(mouseInteract);
-            return;
-        }
-
-        Replace(mouseInteract);
     }
 
     private bool CanBeSmelted(Item selectedItem) {
         return smeltTimeOfItems.ContainsKey(selectedItem.ID);
     }
 
-    private void Replace(MouseInteract mouseInteract) {
-        var t = ItemToSmelt;
-        AddToSmelter(mouseInteract);
-        RemoveFromSmelter(mouseInteract, t);
+    private void Switch(ItemSlot selectedItem) {
+        var t = ItemSlot;
+        ItemSlot = selectedItem;
+        selectedItem = t;
     }
 
-    private void AddSameToSmelter(MouseInteract mouseInteract) {
-        ItemToSmelt.StackSize += mouseInteract.SelectedItemSlot.StackSize;
-        mouseInteract.SelectedItemSlot = null;
-    }
-
-    private void AddToSmelter(MouseInteract mouseInteract) {
-        ItemToSmelt = mouseInteract.SelectedItemSlot;
-        mouseInteract.SelectedItemSlot = null;
-    }
-
-    private void RemoveFromSmelter(MouseInteract mouseInteract, ItemSlot itemToSmelt) {
-        mouseInteract.SelectedItemSlot = itemToSmelt;
-        ItemToSmelt = null;
-    }
-
-    public override void Interact(MouseInteract mouseInteract) {
-        Debug.Log("hello " + mouseInteract.SelectedItemSlot.Item + " " + mouseInteract.SelectedItemSlot.StackSize);
+    public override ItemSlot Interact(ItemSlot selectedItem) {
+        
+        // If entity has been builded
         if (RequiredItems.Count == 0) {
-            OnAddItemToSmelter(mouseInteract);
+
+            // If mouse item is null, then take content of smelter
+            if (selectedItem == null) {
+                var temp = ItemSlot;
+                ItemSlot = null;
+                return temp;
+            }
+
+            if (CanBeSmelted(selectedItem.Item)) {
+
+                if (ItemSlot == null) {
+                    ItemSlot = new ItemSlot(selectedItem.Item, selectedItem.StackSize);
+                    return null;
+                }
+
+                // If the item can be smelted and is already smelting, add to stack. Else switch content.
+                if (ItemSlot.Item.ID == selectedItem.Item.ID) {
+                    ItemSlot.StackSize += selectedItem.StackSize;
+                    return null;
+                }
+
+                // Switch items
+                var temp = ItemSlot;
+                ItemSlot = selectedItem;
+                return temp;
+            }
+
+            return selectedItem;
+
         } else {
-            if (RequiredItems.Contains(mouseInteract.SelectedItemSlot.Item)) {
-                RequiredItems.Remove(mouseInteract.SelectedItemSlot.Item);
+            if (RequiredItems.Contains(selectedItem.Item)) {
+                RequiredItems.Remove(selectedItem.Item);
             }
         }
+
+        return null;
     }
 }

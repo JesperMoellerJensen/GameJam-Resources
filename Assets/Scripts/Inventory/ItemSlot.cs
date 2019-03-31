@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 public class ItemSlot {
-    public Item Item;
+    public Item Item { get; }
     public int StackSize;
 
     public ItemSlot(Item item, int stackSize) {
