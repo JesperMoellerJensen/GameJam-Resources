@@ -23,7 +23,8 @@ public class InventoryHandler : MonoBehaviour
     private ItemSlot[] Inventory;
 
     private int _selectedIndex;
-    private int SelectedIndex { get { return _selectedIndex; }
+    private int SelectedIndex {
+        get { return _selectedIndex; }
         set {
             _selectedIndex = Mathf.Clamp(value, 0, EquippedInventorySize - 1);
 
@@ -33,8 +34,7 @@ public class InventoryHandler : MonoBehaviour
 
 
     // Start is called before the first frame update
-    void Start()
-    {
+    void Start() {
         Inventory = new ItemSlot[Capacity];
 
         OnAddItem((Item)Resources.Load("Scriptable Objects/IronNugget"), 1);
@@ -92,8 +92,7 @@ public class InventoryHandler : MonoBehaviour
             SelectedIndex = 9;
         }
 
-        if (Input.mouseScrollDelta.y < 0f) 
-        {
+        if (Input.mouseScrollDelta.y < 0f) {
             SelectedIndex--;
         }
 
