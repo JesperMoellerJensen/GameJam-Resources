@@ -24,28 +24,29 @@ public class OxygenBankBehavior : EntityBehavior {
     private void Update() {
         UpdateOxygenBar();
     }
-    public override void Interact(MouseInteract mouseInteract) {
+    public override ItemSlot Interact(ItemSlot selectedItemSlot) {
 
-        if(mouseInteract.SelectedItemSlot == null) {
-            GiveOxygenToPlayer();
-            return;
-        }
+        //if(selectedItemSlot == null) {
+        //    GiveOxygenToPlayer();
+        //    return selectedItemSlot;
+        //}
 
-        if (mouseInteract.SelectedItemSlot.Item.ID == ItemID.CarbonCrystal) {
+        if (selectedItemSlot != null && selectedItemSlot.Item.ID == ItemID.CarbonCrystal) {
 
-            float temp = CurrentCapacity + 25f * mouseInteract.SelectedItemSlot.StackSize;
+            float temp = CurrentCapacity + 25f * selectedItemSlot.StackSize;
 
             if (temp > MaxCapacity) {
                 CurrentCapacity = MaxCapacity;
-                mouseInteract.SelectedItemSlot.StackSize = (int)((temp - MaxCapacity) / 25f);
+                selectedItemSlot.StackSize = (int)((temp - MaxCapacity) / 25f);
+                return selectedItemSlot;
             } else {
-                CurrentCapacity = Mathf.Clamp(CurrentCapacity + 25f * mouseInteract.SelectedItemSlot.StackSize, 0, MaxCapacity);
-                mouseInteract.SelectedItemSlot = null;
-                mouseInteract.SelectedItemSlot.StackSize = 0;
+                CurrentCapacity = Mathf.Clamp(CurrentCapacity + 25f * selectedItemSlot.StackSize, 0, MaxCapacity);
+                return null;
             }
         } else {
             GiveOxygenToPlayer();
         }
+        return selectedItemSlot;
     }
 
     public void GiveOxygenToPlayer() {
