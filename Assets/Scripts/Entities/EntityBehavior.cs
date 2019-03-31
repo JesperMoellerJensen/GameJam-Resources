@@ -3,7 +3,7 @@ using UnityEngine;
 
 public abstract class EntityBehavior : MonoBehaviour {
 
-    public abstract ItemSlot Interact(ItemSlot itemSlot);
+    public abstract ItemSlot Interact(ItemSlot selectedItemSlot);
 }
 
 

@@ -12,6 +12,7 @@ public class SmelterBehavior : EntityBehavior {
     private float currentSmeltingTime = 0;
 
     private Dictionary<ItemID, float> smeltTimeOfItems;
+    private TextMesh _textMesh;
 
     // Start is called before the first frame update
     void Start() {
@@ -22,6 +23,8 @@ public class SmelterBehavior : EntityBehavior {
             {ItemID.IronNugget, 5f},
             {ItemID.GoldNugget, 5f}
         };
+
+        _textMesh = GetComponentInChildren<TextMesh>();
     }
 
     // Update is called once per frame
@@ -33,8 +36,7 @@ public class SmelterBehavior : EntityBehavior {
         isSmelting = true;
 
         currentSmeltingTime += Time.deltaTime;
-        if (currentSmeltingTime >= smeltTimeOfItems[ItemSlot.Item.ID]) 
-        {
+        if (currentSmeltingTime >= smeltTimeOfItems[ItemSlot.Item.ID]) {
             Debug.Log($"{ItemSlot.StackSize}");
             SpawnBar();
             ItemSlot.StackSize--;
@@ -45,12 +47,14 @@ public class SmelterBehavior : EntityBehavior {
                 ItemSlot = null;
             }
         }
+
+        UpdateText();
     }
 
     public void SpawnBar() {
-        GameObject item = Instantiate(Resources.Load<GameObject>("Prefabs/Item"),transform.position + new Vector3(0,-1,0),transform.rotation);
+        GameObject item = Instantiate(Resources.Load<GameObject>("Prefabs/Item"), transform.position + new Vector3(0, -1, 0), transform.rotation);
         item.GetComponent<ItemPickup>().item = Resources.Load<Item>($"Scriptable Objects/{ItemSlot.Item.ResourceType}Bar");
-        item.GetComponent<Rigidbody2D>().velocity = new Vector2(Random.Range(-5,5),Random.Range(-2f,-6f));
+        item.GetComponent<Rigidbody2D>().velocity = new Vector2(Random.Range(-5, 5), Random.Range(-2f, -6f));
 
     }
 
@@ -65,7 +69,7 @@ public class SmelterBehavior : EntityBehavior {
     }
 
     public override ItemSlot Interact(ItemSlot selectedItem) {
-        
+
         // If entity has been builded
         if (RequiredItems.Count == 0) {
 
@@ -104,5 +108,12 @@ public class SmelterBehavior : EntityBehavior {
         }
 
         return null;
+    }
+
+    private void UpdateText() {
+        float smeltTime = 0;
+        smeltTimeOfItems.TryGetValue(ItemSlot.Item.ID, out smeltTime);
+        float percentage = Mathf.RoundToInt(currentSmeltingTime / smeltTime * 100f);
+        _textMesh.text = $"{ItemSlot.StackSize} {ItemSlot.Item.DisplayName} | {percentage}%";
     }
 }
