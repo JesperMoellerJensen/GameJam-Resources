@@ -17,7 +17,6 @@ public class OxygenBankBehavior : EntityBehavior {
     private float _barScaleYBot = 0f;
 
     private void Start() {
-        CurrentCapacity = MaxCapacity;
         _textMesh = GetComponentInChildren<TextMesh>();
     }
 
